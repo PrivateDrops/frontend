@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useEffect, useState } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import { Center } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context';
@@ -9,7 +9,7 @@ export const Auth = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!accessToken) navigate('/login');
-  }, []);
+  }, [accessToken, navigate]);
 
   if (!accessToken) {
     return (

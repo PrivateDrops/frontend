@@ -119,7 +119,7 @@ const UploadPage = () => {
       accessToken,
     );
     if (!success) {
-      console.error(response)
+      console.error(response);
       toast({
         title: 'Upload failed',
         description:

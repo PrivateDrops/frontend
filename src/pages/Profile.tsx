@@ -57,7 +57,7 @@ const ProfilePage = () => {
     }
 
     const sum = ratings.reduce((acc, rating) => acc + rating, 0);
-    return (sum / ratings.length).toFixed(2);
+    return sum / ratings.length;
   };
 
   return (
@@ -82,7 +82,7 @@ const ProfilePage = () => {
                     <Text fontSize="lg">
                       Rating:{' '}
                       <Text as="span" fontWeight="semibold">
-                        {averageRating}{' '}
+                        {averageRating.toFixed(2)}{' '}
                         <small>got over {user.ratings.length} reviews</small>
                       </Text>
                     </Text>

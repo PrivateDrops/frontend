@@ -2,18 +2,19 @@ import {
   ReactNode,
   createContext,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
-import axios from 'axios';
 
 export const AppContext = createContext({
   accessToken: '',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   saveAccessToken: (val: string) => {},
   id: '',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   saveId: (val: string) => {},
   nickname: '',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   saveNickname: (val: string) => {},
   clear: () => {},
 });

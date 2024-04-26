@@ -31,15 +31,15 @@ import { StarRating } from '../components/StarRating';
 import { FaInfoCircle } from 'react-icons/fa';
 
 type Media = {
-  url: string,
-  price: number,
-  currency: string,
-  singleView: boolean,
-  mime: string,
-  paid: true,
-  ratings: number,
-  leftFeedback: boolean
-}
+  url: string;
+  price: number;
+  currency: string;
+  singleView: boolean;
+  mime: string;
+  paid: true;
+  ratings: number;
+  leftFeedback: boolean;
+};
 
 const ViewPage = () => {
   const [media, setMedia] = useState<Media>();
@@ -61,7 +61,7 @@ const ViewPage = () => {
       rating: n,
     });
     if (success) localStorage.setItem('userRating_' + code, String(n));
-    else console.error(response)
+    else console.error(response);
   };
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const ViewPage = () => {
         setLoading(true);
         const { response, success } = await sendGetRequest(`media/${code}`);
         if (success) {
-          console.log(response); 
+          console.log(response);
           setMedia({
             url: response.mediaUrl,
             price: response.price,
@@ -82,7 +82,7 @@ const ViewPage = () => {
             paid: response.paid,
             ratings: response.ratings,
             leftFeedback: response.leftFeedback,
-          })
+          });
           setNickname(response.nickname);
         } else {
           toast({
@@ -110,13 +110,18 @@ const ViewPage = () => {
         <ResponsiveCard>
           {media && media.url && (
             <>
-            <AspectRatio maxW='500px' ratio={1}>
-              {media.mime.includes('image') ? (
-                <Image src={media.url} onLoad={() => setLoading(false)} />
-              ) : (
-                <iframe title="media" src={media.url} onLoad={() => setLoading(false)} allowFullScreen />
-              )}
-            </AspectRatio>
+              <AspectRatio maxW="500px" ratio={1}>
+                {media.mime.includes('image') ? (
+                  <Image src={media.url} onLoad={() => setLoading(false)} />
+                ) : (
+                  <iframe
+                    title="media"
+                    src={media.url}
+                    onLoad={() => setLoading(false)}
+                    allowFullScreen
+                  />
+                )}
+              </AspectRatio>
               {!media.paid && media.price > 0 && (
                 <CardBody>
                   <Center
@@ -180,74 +185,75 @@ const ViewPage = () => {
         </VStack>
       </Skeleton>
 
-      {media &&
-      <Modal isOpen={isOpen} onClose={onClose} size="xs">
-        <ModalOverlay
-          bg="none"
-          backdropFilter="auto"
-          backdropInvert="80%"
-          backdropBlur="2px"
-        />
-        <ModalContent mx={4}>
-          <ModalHeader>Media Info</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody p={6}>
-            <Box>
-            Sent by:{' '}
-            <Text as="span" fontWeight="bold">
-              {nickname || 'Anon'}
-            </Text>
-            </Box>
-            <Box mt={2}>
-              Rating:
-              {media.ratings == 0 ? (
-                <Badge
-                ml={2}
-                px={2}
-                py={1}
-                borderRadius="md">unrated</Badge>
-              ) : (
-              <Badge
-                ml={2}
-                colorScheme={media.ratings > 2 ? 'green' : 'red'}
-                px={2}
-                py={1}
-                borderRadius="md"
-              >
-                {media.ratings}/5
-              </Badge>
+      {media && (
+        <Modal isOpen={isOpen} onClose={onClose} size="xs">
+          <ModalOverlay
+            bg="none"
+            backdropFilter="auto"
+            backdropInvert="80%"
+            backdropBlur="2px"
+          />
+          <ModalContent mx={4}>
+            <ModalHeader>Media Info</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody p={6}>
+              <Box>
+                Sent by:{' '}
+                <Text as="span" fontWeight="bold">
+                  {nickname || 'Anon'}
+                </Text>
+              </Box>
+              <Box mt={2}>
+                Rating:
+                {media.ratings == 0 ? (
+                  <Badge ml={2} px={2} py={1} borderRadius="md">
+                    unrated
+                  </Badge>
+                ) : (
+                  <Badge
+                    ml={2}
+                    colorScheme={media.ratings > 2 ? 'green' : 'red'}
+                    px={2}
+                    py={1}
+                    borderRadius="md"
+                  >
+                    {media.ratings}/5
+                  </Badge>
+                )}
+              </Box>
+              <Box mt={2}>
+                View:{' '}
+                <Text as="span" fontWeight="bold">
+                  {media.singleView ? 'one time' : 'unlimited'}
+                </Text>
+              </Box>
+            </ModalBody>
+            <ModalFooter justifyContent="space-between">
+              {media.paid && !media.leftFeedback && (
+                <Button
+                  size="sm"
+                  colorScheme="green"
+                  variant="ghost"
+                  onClick={() => {
+                    setHide(false);
+                    onClose();
+                  }}
+                >
+                  Leave feedback
+                </Button>
               )}
-            </Box>
-            <Box mt={2}>
-            View: <Text as="span" fontWeight="bold">{media.singleView ? 'one time' : 'unlimited'}</Text>
-            </Box>
-          </ModalBody>
-          <ModalFooter justifyContent="space-between">
-            {media.paid && !media.leftFeedback &&
-            <Button
-              size="sm"
-              colorScheme="green"
-              variant="ghost"
-              onClick={() => {
-                setHide(false);
-                onClose();
-              }}
-            >
-              Leave feedback
-            </Button>
-            }
-            <Button
-              size="sm"
-              colorScheme="blue"
-              variant="ghost"
-              onClick={onClose}
-            >
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      }
+              <Button
+                size="sm"
+                colorScheme="blue"
+                variant="ghost"
+                onClick={onClose}
+              >
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
     </Center>
   );
 };

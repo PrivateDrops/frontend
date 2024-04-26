@@ -7,16 +7,12 @@ import {
   Tooltip,
   VStack,
   Box,
-  useClipboard,
   useToast,
   Divider,
 } from '@chakra-ui/react';
 import { FooterMenu } from '../components/FooterMenu';
 import { Auth } from './Auth';
-import {
-  sendGetRequest,
-  sendPostRequest,
-} from '../lib/request';
+import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { AppContext } from '../context';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { FaLink, FaTrash } from 'react-icons/fa6';
@@ -35,16 +31,18 @@ const MediaPage = () => {
     };
 
     load();
-  }, []);
+  }, [accessToken]);
 
   const copyUrl = (code: string) => {
-    navigator.clipboard.writeText(`http://localhost:5173/view/${code}`).then(() => {
-      toast({
-        title: 'Link copied',
-        duration: 500,
-        status: 'success',
+    navigator.clipboard
+      .writeText(`http://localhost:5173/view/${code}`)
+      .then(() => {
+        toast({
+          title: 'Link copied',
+          duration: 500,
+          status: 'success',
+        });
       });
-    });
   };
 
   const deleteMedia = async (id: string) => {
@@ -68,7 +66,7 @@ const MediaPage = () => {
         isClosable: true,
         status: 'success',
       });
-      window.location.reload()
+      window.location.reload();
     }
   };
 

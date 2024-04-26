@@ -4,10 +4,10 @@ import { AppProvider } from './context';
 
 const config = {
   useSystemColorMode: true,
-}
+};
 
 export const Providers = ({ children }: { children: ReactNode }) => {
-  const theme = extendTheme({ config })
+  const theme = extendTheme({ config });
 
   return (
     <ChakraProvider theme={theme}>
