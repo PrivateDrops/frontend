@@ -8,14 +8,11 @@ import {
 
 export const AppContext = createContext({
   accessToken: '',
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  saveAccessToken: (val: string) => {},
+  saveAccessToken: (val: string) => {val},
   id: '',
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  saveId: (val: string) => {},
+  saveId: (val: string) => {val},
   nickname: '',
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  saveNickname: (val: string) => {},
+  saveNickname: (val: string) => {val},
   clear: () => {},
 });
 
