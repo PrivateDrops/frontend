@@ -18,7 +18,7 @@ export const FooterMenu = () => {
       <IconButton
         fontSize={['lg', '2xl']}
         variant="ghost"
-        colorScheme={location.pathname == '/upload' ? 'teal' : ''}
+        colorScheme={location.pathname.includes('upload') ? 'teal' : ''}
         aria-label="Upload"
         icon={<FaLockOpen />}
         isRound
@@ -28,7 +28,7 @@ export const FooterMenu = () => {
       <IconButton
         fontSize={['lg', '2xl']}
         variant="ghost"
-        colorScheme={location.pathname == '/media' ? 'teal' : ''}
+        colorScheme={location.pathname.includes('media') ? 'teal' : ''}
         aria-label="Media"
         icon={<FaImages />}
         isRound
@@ -38,7 +38,7 @@ export const FooterMenu = () => {
       <IconButton
         fontSize={['lg', '2xl']}
         variant="ghost"
-        colorScheme={location.pathname == '/profile' ? 'teal' : ''}
+        colorScheme={location.pathname.includes('profile') ? 'teal' : ''}
         aria-label="Profile"
         icon={<FaUserCircle />}
         isRound
