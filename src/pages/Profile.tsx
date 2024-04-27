@@ -91,7 +91,7 @@ const ProfilePage = () => {
                     <Text fontSize="lg">
                       Balance:{' '}
                       <Text as="span" fontWeight="semibold">
-                        ${(user.payouts / 100).toFixed(2)}
+                        {(user.payouts / 100).toFixed(2)}€
                       </Text>
                     </Text>
                   </ListItem>

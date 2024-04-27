@@ -90,7 +90,7 @@ const MediaPage = () => {
                 <VStack spacing={4} align="center" flex="1">
                   <Text fontSize="lg">{m.totalViews} views</Text>
                   <Text fontSize="lg">
-                    ${(m.earnings / 100).toFixed(2)} earned
+                    {(m.earnings / 100).toFixed(2)}€ earned
                   </Text>
                 </VStack>
                 <VStack spacing={4}>

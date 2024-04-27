@@ -86,7 +86,7 @@ export const HoverableImage = ({
             </HStack>
             <HStack>
               <Icon as={FaMoneyBill} w={8} h={8} />
-              <Text fontWeight="bold">${(earnings / 100).toFixed(2)}</Text>
+              <Text fontWeight="bold">{(earnings / 100).toFixed(2)}€</Text>
             </HStack>
           </Stack>
         </Center>

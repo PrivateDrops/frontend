@@ -207,7 +207,7 @@ const UploadPage = () => {
                     textColor={isValidPrice() ? 'gray.500' : 'red.500'}
                   />
                   <FormErrorMessage textAlign="center">
-                    Invalid price. Must be between $0.99 and $500.00, up to 2
+                    Invalid price. Must be between 0.99 and 500.00, up to 2
                     decimal places.
                   </FormErrorMessage>
                 </FormControl>
