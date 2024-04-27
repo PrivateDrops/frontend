@@ -75,7 +75,7 @@ const ViewPage = () => {
           console.log(response);
           setMedia({
             url: response.mediaUrl,
-            price: response.price,
+            price: (response.price / 100),
             currency: response.currency,
             singleView: response.singleView,
             mime: response.mime,
@@ -134,7 +134,7 @@ const ViewPage = () => {
                     bg="rgba(0,0,0,0.5)" // Adding an overlay if no image
                   >
                     <Text fontSize="5xl" fontWeight="bold" color="white">
-                      ${media.price}
+                      ${media.price.toFixed(2)}
                     </Text>
                     <Button mt={4} colorScheme="green" size="lg" onClick={pay}>
                       Pay to reveal
