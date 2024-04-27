@@ -135,7 +135,7 @@ const UploadPage = () => {
       return;
     }
 
-    setUrl(`http://localhost:5173/view/${response.code}`);
+    setUrl(`${import.meta.env.VITE_APP_URL}/view/${response.code}`);
     setStep(3);
     setLoading(false);
     toast({

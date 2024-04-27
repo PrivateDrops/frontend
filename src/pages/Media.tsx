@@ -35,7 +35,7 @@ const MediaPage = () => {
 
   const copyUrl = (code: string) => {
     navigator.clipboard
-      .writeText(`http://localhost:5173/view/${code}`)
+      .writeText(`${import.meta.env.VITE_APP_URL}/view/${code}`)
       .then(() => {
         toast({
           title: 'Link copied',

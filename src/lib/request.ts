@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const BACKEND = 'https://app.privatedrops.me';
+
 const processError = (error: any) => {
   const errorMessage = error.message || 'Unexpected error occurred';
   const responseData = error.response ? error.response.data : errorMessage;
@@ -12,7 +14,7 @@ export const sendGetRequest = async (
   accessToken: string = '',
 ) => {
   try {
-    const response = await axios.get(`http://localhost:3000/${endpoint}`, {
+    const response = await axios.get(`${BACKEND}/${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
@@ -32,7 +34,7 @@ export const sendPostRequest = async (
 ) => {
   try {
     const response = await axios.post(
-      `http://localhost:3000/${endpoint}`,
+      `${BACKEND}/${endpoint}`,
       body,
       {
         headers: {
@@ -63,7 +65,7 @@ export const sendPostRequestWithFile = async (
     });
 
     const response = await axios.post(
-      `http://localhost:3000/${endpoint}`,
+      `${BACKEND}/${endpoint}`,
       formData,
       {
         headers: {
@@ -84,7 +86,7 @@ export const sendDeleteRequest = async (
   accessToken: string,
 ) => {
   try {
-    const response = await axios.delete(`http://localhost:3000/${endpoint}`, {
+    const response = await axios.delete(`${BACKEND}/${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
