@@ -33,16 +33,12 @@ export const sendPostRequest = async (
   accessToken: string = '',
 ) => {
   try {
-    const response = await axios.post(
-      `${BACKEND}/${endpoint}`,
-      body,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const response = await axios.post(`${BACKEND}/${endpoint}`, body, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+    });
 
     return { response: response.data, success: true };
   } catch (error: any) {
@@ -64,16 +60,12 @@ export const sendPostRequestWithFile = async (
       formData.append(key, additionalData[key]);
     });
 
-    const response = await axios.post(
-      `${BACKEND}/${endpoint}`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const response = await axios.post(`${BACKEND}/${endpoint}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+    });
 
     return { response: response.data, success: true };
   } catch (error: any) {

@@ -8,11 +8,17 @@ import {
 
 export const AppContext = createContext({
   accessToken: '',
-  saveAccessToken: (val: string) => {val},
+  saveAccessToken: (val: string) => {
+    val;
+  },
   id: '',
-  saveId: (val: string) => {val},
+  saveId: (val: string) => {
+    val;
+  },
   nickname: '',
-  saveNickname: (val: string) => {val},
+  saveNickname: (val: string) => {
+    val;
+  },
   clear: () => {},
 });
 
