@@ -7,9 +7,11 @@ import UploadPage from './pages/Upload.tsx';
 import MediaPage from './pages/Media.tsx';
 import ProfilePage from './pages/Profile.tsx';
 import LoginPage from './pages/Login.tsx';
-import './index.css';
 import ViewPage from './pages/View.tsx';
 import InterceptLogin from './pages/InterceptLogin.tsx';
+import InterceptPayment from './pages/InterceptPayment.tsx';
+import './index.css';
+import ErrorPage from './pages/Error.tsx';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: '/login/:nonce',
     element: <InterceptLogin />,
+  },
+  {
+    path: '/payment',
+    element: <InterceptPayment />,
   },
   {
     path: '/upload',
@@ -39,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: '/view/:code',
     element: <ViewPage />,
+  },
+  {
+    path: '*',
+    element: <ErrorPage />,
   },
 ]);
 

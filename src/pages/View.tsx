@@ -25,26 +25,34 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FaInfoCircle } from 'react-icons/fa';
 import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { StarRating } from '../components/StarRating';
-import { FaInfoCircle } from 'react-icons/fa';
 
 type Media = {
-  url: string;
+  id: string;
+  code: string;
   price: number;
   currency: string;
+  url: string;
   singleView: boolean;
+  totalViews: number;
   mime: string;
-  paid: true;
-  ratings: number;
-  leftFeedback: boolean;
+  viewer: {
+    hasPaid: boolean;
+    leftFeedback: boolean;
+  };
+  owner: {
+    nickname?: string;
+    ratings: number;
+  };
 };
 
 const ViewPage = () => {
   const [media, setMedia] = useState<Media>();
-  const [nickname, setNickname] = useState<string>('');
   const [hide, setHide] = useState<boolean>(false);
+  const [expired, setExpired] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const { code } = useParams();
   const [userRating, setUserRating] = useState<number>(
@@ -56,7 +64,7 @@ const ViewPage = () => {
 
   const leaveFeedback = async (n: number) => {
     setUserRating(n);
-    const { success, response } = await sendPostRequest('media/review', {
+    const { response, success } = await sendPostRequest('media/review', {
       code,
       rating: n,
     });
@@ -72,18 +80,33 @@ const ViewPage = () => {
         setLoading(true);
         const { response, success } = await sendGetRequest(`media/${code}`);
         if (success) {
-          console.log(response);
           setMedia({
-            url: response.mediaUrl,
+            id: response.id,
+            code: response.code,
             price: response.price / 100,
             currency: response.currency,
+            url: response.url,
             singleView: response.singleView,
+            totalViews: response.totalViews,
             mime: response.mime,
-            paid: response.paid,
-            ratings: response.ratings,
-            leftFeedback: response.leftFeedback,
+            viewer: {
+              hasPaid: response.viewer.hasPaid,
+              leftFeedback: response.viewer.leftFeedback,
+            },
+            owner: {
+              nickname: response.owner.nickname,
+              ratings: response.owner.ratings,
+            },
           });
-          setNickname(response.nickname);
+          console.log(response.url);
+
+          if (
+            response.singleView &&
+            !response.viewer.hasPaid &&
+            response.totalViews > 1
+          ) {
+            setExpired(true);
+          }
         } else {
           toast({
             title: 'Media retrieval failed',
@@ -100,8 +123,22 @@ const ViewPage = () => {
   }, [code]);
 
   const pay = async () => {
-    const { success } = await sendGetRequest('media/pay/' + code);
-    if (success) window.location.reload();
+    const redirectUrl = `${import.meta.env.VITE_APP_URL}/payment`;
+    const { success, response } = await sendPostRequest('payment/checkout', {
+      code,
+      redirectUrlSuccess: redirectUrl + '?success=true&code=' + code,
+      redirectUrlCancel: redirectUrl + '?success=false&code=' + code,
+    });
+    if (success) window.location.href = response;
+    else {
+      toast({
+        title: 'Payment link retrieval failed',
+        description: response?.error || 'An unexpected error occurred',
+        duration: 2000,
+        isClosable: true,
+        status: 'error',
+      });
+    }
   };
 
   return (
@@ -122,7 +159,7 @@ const ViewPage = () => {
                   />
                 )}
               </AspectRatio>
-              {!media.paid && media.price > 0 && (
+              {!media.viewer.hasPaid && (
                 <CardBody>
                   <Center
                     flexDirection="column"
@@ -131,21 +168,36 @@ const ViewPage = () => {
                     left="0"
                     right="0"
                     bottom="0"
-                    bg="rgba(0,0,0,0.5)" // Adding an overlay if no image
+                    bg="rgba(0,0,0,0.5)"
                   >
-                    <Text fontSize="5xl" fontWeight="bold" color="white">
-                      {media.price.toFixed(2)}€
-                    </Text>
-                    <Button mt={4} colorScheme="green" size="lg" onClick={pay}>
-                      Pay to reveal
-                    </Button>
+                    <>
+                      {expired ? (
+                        <Text fontSize="5xl" fontWeight="bold" color="white">
+                          Expired :/
+                        </Text>
+                      ) : (
+                        <>
+                          <Text fontSize="5xl" fontWeight="bold" color="white">
+                            {media.price.toFixed(2)}€
+                          </Text>
+                          <Button
+                            mt={4}
+                            colorScheme="green"
+                            size="lg"
+                            onClick={pay}
+                          >
+                            Pay to reveal
+                          </Button>
+                        </>
+                      )}
+                    </>
                   </Center>
                 </CardBody>
               )}
             </>
           )}
         </ResponsiveCard>
-        {media && userRating == 0 && media.paid && !hide && (
+        {media && userRating == 0 && media.viewer.hasPaid && !hide && (
           <VStack position="absolute" top="0" p={4}>
             <Box p={4} bg="white" borderRadius="lg" shadow="md" width="full">
               <HStack>
@@ -200,24 +252,24 @@ const ViewPage = () => {
               <Box>
                 Sent by:{' '}
                 <Text as="span" fontWeight="bold">
-                  {nickname || 'Anon'}
+                  {media.owner.nickname || 'Anon'}
                 </Text>
               </Box>
               <Box mt={2}>
                 Rating:
-                {media.ratings == 0 ? (
+                {media.owner.ratings == 0 ? (
                   <Badge ml={2} px={2} py={1} borderRadius="md">
                     unrated
                   </Badge>
                 ) : (
                   <Badge
                     ml={2}
-                    colorScheme={media.ratings > 2 ? 'green' : 'red'}
+                    colorScheme={media.owner.ratings > 2 ? 'green' : 'red'}
                     px={2}
                     py={1}
                     borderRadius="md"
                   >
-                    {media.ratings}/5
+                    {media.owner.ratings}/5
                   </Badge>
                 )}
               </Box>
@@ -229,7 +281,7 @@ const ViewPage = () => {
               </Box>
             </ModalBody>
             <ModalFooter justifyContent="space-between">
-              {media.paid && !media.leftFeedback && (
+              {media.viewer.hasPaid && !media.viewer.leftFeedback && (
                 <Button
                   size="sm"
                   colorScheme="green"

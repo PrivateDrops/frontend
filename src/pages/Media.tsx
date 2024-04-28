@@ -9,13 +9,16 @@ import {
   Box,
   useToast,
   Divider,
+  AspectRatio,
+  Skeleton,
 } from '@chakra-ui/react';
 import { FooterMenu } from '../components/FooterMenu';
 import { Auth } from './Auth';
-import { sendGetRequest, sendPostRequest } from '../lib/request';
+import { sendDeleteRequest, sendGetRequest } from '../lib/request';
 import { AppContext } from '../context';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { FaLink, FaTrash } from 'react-icons/fa6';
+import { MediaLoader } from '../components/MediaLoader';
 
 const MediaPage = () => {
   const [media, setMedia] = useState<any[]>([]);
@@ -26,8 +29,7 @@ const MediaPage = () => {
     const load = async () => {
       const { response, success } = await sendGetRequest('media', accessToken);
       if (!success) return;
-      console.log(response.media);
-      setMedia(response?.media);
+      setMedia(response);
     };
 
     load();
@@ -46,9 +48,8 @@ const MediaPage = () => {
   };
 
   const deleteMedia = async (id: string) => {
-    const { response, success } = await sendPostRequest(
+    const { response, success } = await sendDeleteRequest(
       `media/${id}`,
-      {},
       accessToken,
     );
     if (!success) {
@@ -73,31 +74,27 @@ const MediaPage = () => {
   return (
     <Auth>
       <ResponsiveCard>
-        <Box overflowX="scroll" padding="4" maxWidth="full">
-          {media.map((m: any, index: number) => (
+        <Box overflowX="auto" padding="4">
+          {media.map((m, index) => (
             <Box key={index}>
               <HStack spacing={4} align="stretch" p={4}>
                 <Box width="100px" height="100px" overflow="hidden">
-                  <Image
-                    src={m.url}
-                    alt="Dynamic Image"
-                    objectFit="cover"
-                    width="100%"
-                    height="100%"
-                    borderRadius="md"
-                  />
+                  <MediaLoader maxW={'100px'} ratio={1} media={m} />
                 </Box>
                 <VStack spacing={4} align="center" flex="1">
-                  <Text fontSize="lg">{m.totalViews} views</Text>
-                  <Text fontSize="lg">
-                    {(m.earnings / 100).toFixed(2)}€ earned
+                  <Text fontSize={{ base: 'md', md: 'lg' }}>
+                    {m.totalViews} <small>views</small>
+                  </Text>
+                  <Text fontSize={{ base: 'md', md: 'lg' }}>
+                    {(m.earnings / 100).toFixed(2)}
+                    {m.currency == 'eur' ? '€' : '$'} <small>earned</small>
                   </Text>
                 </VStack>
                 <VStack spacing={4}>
                   <Tooltip label="Copy Link" hasArrow>
                     <IconButton
                       icon={<FaLink />}
-                      aria-label="Link"
+                      aria-label="Copy Link"
                       colorScheme="green"
                       onClick={() => copyUrl(m.code)}
                     />
@@ -106,12 +103,13 @@ const MediaPage = () => {
                     <IconButton
                       icon={<FaTrash />}
                       aria-label="Delete"
+                      colorScheme="red"
                       onClick={() => deleteMedia(m.id)}
                     />
                   </Tooltip>
                 </VStack>
               </HStack>
-              {m == media[media.length - 1] ? '' : <Divider />}
+              {index < media.length - 1 && <Divider />}
             </Box>
           ))}
         </Box>

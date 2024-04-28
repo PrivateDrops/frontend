@@ -161,7 +161,8 @@ const UploadPage = () => {
             />
             {!fileSelected ? (
               <IconButton
-                fontSize="2xl"
+                fontSize={{ base: 'md', sm: 'lg', md: '2xl', lg: '3xl' }}
+                boxSize={{ base: '40px', sm: '48px', md: '56px', lg: '64px' }} // Adjust button size at different breakpoints
                 colorScheme="green"
                 aria-label="Upload"
                 icon={<FaPlus />}
@@ -170,7 +171,7 @@ const UploadPage = () => {
               />
             ) : (
               <Box position="relative" display="inline-block">
-                <Avatar size="lg" src={imagePreviewUrl} />
+                <Avatar size={{ base: 'md', md: 'xl' }} src={imagePreviewUrl} />
                 <Box
                   position="absolute"
                   right="0"
@@ -186,7 +187,7 @@ const UploadPage = () => {
               Upload a file
             </Text>
             <Text fontSize="md" color="gray.500">
-              of any kind
+              image or video
             </Text>
             {step === 1 && (
               <>
@@ -254,8 +255,7 @@ const UploadPage = () => {
                 >
                   {loading ? (
                     <>
-                      <Spinner />
-                      &nbsp;Uploading...
+                      <Spinner /> Uploading...
                     </>
                   ) : (
                     'Upload'
