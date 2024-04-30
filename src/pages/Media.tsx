@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import {
-  Image,
   HStack,
   IconButton,
   Text,
@@ -9,8 +8,6 @@ import {
   Box,
   useToast,
   Divider,
-  AspectRatio,
-  Skeleton,
 } from '@chakra-ui/react';
 import { FooterMenu } from '../components/FooterMenu';
 import { Auth } from './Auth';
