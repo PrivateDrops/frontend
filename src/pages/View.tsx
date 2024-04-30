@@ -29,6 +29,7 @@ import { FaInfoCircle } from 'react-icons/fa';
 import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { StarRating } from '../components/StarRating';
+import { MediaProtectionLayer } from '../components/MediaOverlay';
 
 type Media = {
   id: string;
@@ -54,6 +55,7 @@ const ViewPage = () => {
   const [hide, setHide] = useState<boolean>(false);
   const [expired, setExpired] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingButton, setLoadingButton] = useState<boolean>(false);
   const { code } = useParams();
   const [userRating, setUserRating] = useState<number>(
     parseInt(localStorage.getItem('userRating_' + code) || '0'),
@@ -61,16 +63,6 @@ const ViewPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const leaveFeedback = async (n: number) => {
-    setUserRating(n);
-    const { response, success } = await sendPostRequest('media/review', {
-      code,
-      rating: n,
-    });
-    if (success) localStorage.setItem('userRating_' + code, String(n));
-    else console.error(response);
-  };
 
   useEffect(() => {
     const load = async () => {
@@ -98,7 +90,6 @@ const ViewPage = () => {
               ratings: response.owner.ratings,
             },
           });
-          console.log(response.url);
 
           if (
             response.singleView &&
@@ -110,7 +101,10 @@ const ViewPage = () => {
         } else {
           toast({
             title: 'Media retrieval failed',
-            description: response?.error || 'An unexpected error occurred',
+            description:
+              response?.error ||
+              response?.message[0] ||
+              'An unexpected error occurred',
             duration: 2000,
             isClosable: true,
             status: 'error',
@@ -123,6 +117,7 @@ const ViewPage = () => {
   }, [code]);
 
   const pay = async () => {
+    setLoadingButton(true);
     const redirectUrl = `${import.meta.env.VITE_APP_URL}/payment`;
     const { success, response } = await sendPostRequest('payment/checkout', {
       code,
@@ -133,12 +128,25 @@ const ViewPage = () => {
     else {
       toast({
         title: 'Payment link retrieval failed',
-        description: response?.error || 'An unexpected error occurred',
+        description:
+          response?.error ||
+          response?.message[0] ||
+          'An unexpected error occurred',
         duration: 2000,
         isClosable: true,
         status: 'error',
       });
+      setLoadingButton(false);
     }
+  };
+
+  const leaveFeedback = async (n: number) => {
+    setUserRating(n);
+    const { success } = await sendPostRequest('media/review', {
+      code,
+      rating: n,
+    });
+    if (success) localStorage.setItem('userRating_' + code, String(n));
   };
 
   return (
@@ -147,18 +155,20 @@ const ViewPage = () => {
         <ResponsiveCard>
           {media && media.url && (
             <>
-              <AspectRatio maxW="500px" ratio={1}>
-                {media.mime.includes('image') ? (
-                  <Image src={media.url} onLoad={() => setLoading(false)} />
-                ) : (
-                  <iframe
-                    title="media"
-                    src={media.url}
-                    onLoad={() => setLoading(false)}
-                    allowFullScreen
-                  />
-                )}
-              </AspectRatio>
+              <MediaProtectionLayer enabled={media.viewer.hasPaid}>
+                <AspectRatio maxW="500px" ratio={1}>
+                  {media.mime.includes('image') ? (
+                    <Image src={media.url} onLoad={() => setLoading(false)} />
+                  ) : (
+                    <iframe
+                      title="media"
+                      src={media.url}
+                      onLoad={() => setLoading(false)}
+                      allowFullScreen
+                    />
+                  )}
+                </AspectRatio>
+              </MediaProtectionLayer>
               {!media.viewer.hasPaid && (
                 <CardBody>
                   <Center
@@ -185,8 +195,9 @@ const ViewPage = () => {
                             colorScheme="green"
                             size="lg"
                             onClick={pay}
+                            isDisabled={loadingButton}
                           >
-                            Pay to reveal
+                            {loadingButton ? 'Redirecting...' : 'Pay to reveal'}
                           </Button>
                         </>
                       )}
@@ -264,7 +275,7 @@ const ViewPage = () => {
                 ) : (
                   <Badge
                     ml={2}
-                    colorScheme={media.owner.ratings > 2 ? 'green' : 'red'}
+                    colorScheme={media.owner.ratings >= 3 ? 'green' : 'red'}
                     px={2}
                     py={1}
                     borderRadius="md"

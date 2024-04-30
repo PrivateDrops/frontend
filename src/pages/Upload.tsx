@@ -119,12 +119,11 @@ const UploadPage = () => {
       accessToken,
     );
     if (!success) {
-      console.error(response);
       toast({
         title: 'Upload failed',
         description:
           response?.error ||
-          response.message[0] ||
+          response?.message[0] ||
           'An unexpected error occurred',
         duration: 2000,
         isClosable: true,

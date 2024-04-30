@@ -38,6 +38,19 @@ const ProfilePage = () => {
         'payment/kyc',
         accessToken,
       );
+      if (success) window.location.href = response;
+      else {
+        toast({
+          title: 'Error getting verification link',
+          description:
+            response?.error ||
+            response?.message[0] ||
+            'An unexpected error occurred',
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+        });
+      }
     }
   };
 
@@ -47,6 +60,10 @@ const ProfilePage = () => {
       if (!success) {
         toast({
           title: 'Error getting user data',
+          description:
+            response?.error ||
+            response?.message[0] ||
+            'An unexpected error occurred',
           duration: 2000,
           isClosable: true,
           status: 'error',

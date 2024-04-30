@@ -5,7 +5,9 @@ import {
   Card,
   CardBody,
   Center,
+  Divider,
   FormControl,
+  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -80,6 +82,12 @@ const LoginPage = () => {
                   isDisabled={sent}
                   onChange={(e) => setEmail(e.target.value.toLowerCase())}
                 />
+                <FormHelperText>
+                  By logging in you accept our{' '}
+                  <Text as="a" fontWeight={'bold'} href="/tos">
+                    ToS
+                  </Text>
+                </FormHelperText>
               </FormControl>
               {!sent ? (
                 <Button
@@ -92,24 +100,27 @@ const LoginPage = () => {
                   Send Email
                 </Button>
               ) : (
-                <VStack spacing={2}>
-                  <Text>Click on the link you just received to login.</Text>
-                  {timeLeft > 0 ? (
-                    <Text fontSize="sm" color="gray.500">
-                      Please wait {timeLeft} seconds to resend.
-                    </Text>
-                  ) : (
-                    <Button
-                      colorScheme="blue"
-                      size="sm"
-                      width="full"
-                      isDisabled={!isValidEmail()}
-                      onClick={sendEmailCode}
-                    >
-                      Resend Email
-                    </Button>
-                  )}
-                </VStack>
+                <>
+                  <Divider />
+                  <VStack spacing={2}>
+                    <Text>Click on the link you just received to login.</Text>
+                    {timeLeft > 0 ? (
+                      <Text fontSize="sm" color="gray.500">
+                        Please wait {timeLeft} seconds to resend.
+                      </Text>
+                    ) : (
+                      <Button
+                        colorScheme="blue"
+                        size="sm"
+                        width="full"
+                        isDisabled={!isValidEmail()}
+                        onClick={sendEmailCode}
+                      >
+                        Resend Email
+                      </Button>
+                    )}
+                  </VStack>
+                </>
               )}
             </VStack>
           </CardBody>
