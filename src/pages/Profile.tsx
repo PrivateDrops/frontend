@@ -15,7 +15,7 @@ import { FooterMenu } from '../components/FooterMenu';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { PayoutForm } from '../components/PayoutForm';
 import { AppContext } from '../context';
-import { sendGetRequest } from '../lib/request';
+import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { Auth } from './Auth';
 import { valueFormatter } from '../lib/helpers';
 
@@ -34,6 +34,7 @@ export type User = {
 
 const ProfilePage = () => {
   const [user, setUser] = useState<User>();
+  const [nickname, setNickname] = useState<string>('');
   const [averageRating, setAverageRating] = useState<number>(0);
   const { accessToken } = useContext(AppContext);
   const toast = useToast();
@@ -56,8 +57,8 @@ const ProfilePage = () => {
       }
 
       setUser(response);
-      const ratings = response.ratings;
-      setAverageRating(calculateAverage(ratings));
+      setNickname(response.nickname);
+      setAverageRating(calculateAverage(response.ratings));
     };
 
     load();
@@ -71,6 +72,22 @@ const ProfilePage = () => {
     return sum / ratings.length;
   };
 
+  const updateNickname = async () => {
+    const { success } = await sendPostRequest(
+      'user',
+      { nickname },
+      accessToken,
+    );
+
+    if (success)
+      toast({
+        title: 'Nickname updated',
+        duration: 2000,
+        isClosable: true,
+        status: 'success',
+      });
+  };
+
   return (
     <Auth>
       {user && (
@@ -79,10 +96,15 @@ const ProfilePage = () => {
             <CardBody>
               <VStack spacing={5} align="stretch">
                 <Editable
+                  submitOnBlur={true}
                   fontSize="2xl"
                   defaultValue="Click to add nickname"
-                  value={user.nickname || 'Click to add nickname'}
                   textAlign="center"
+                  value={nickname}
+                  onSubmit={updateNickname}
+                  onChange={(value) => setNickname(value)}
+                  autoCapitalize="false"
+                  spellCheck="false"
                 >
                   <EditablePreview />
                   <EditableInput />
