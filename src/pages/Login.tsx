@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import {
   Box,
   Button,
@@ -17,15 +17,18 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { FaCheck } from 'react-icons/fa6';
 import { AppContext } from '../context';
 import { sendPostRequest } from '../lib/request';
-import { FaCheck } from 'react-icons/fa6';
 
 const LoginPage = () => {
+  const [honeypot, setHoneypot] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [sent, setEmailSent] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const { accessToken } = useContext(AppContext);
+  const recaptchaRef = useRef();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,6 +54,10 @@ const LoginPage = () => {
   };
 
   const sendEmailCode = async () => {
+    if (honeypot !== '') {
+      return;
+    }
+
     if (!isValidEmail) return;
 
     const { success } = await sendPostRequest(
@@ -72,12 +79,23 @@ const LoginPage = () => {
         justifyContent="center"
         minHeight="100vh"
       >
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          size="invisible"
+          sitekey="6Lch2CsUAAAAAHLmH4oypQ886v2500r2mcMLcbLl"
+        />
         <Card maxW="md" w="full" boxShadow="xl" borderRadius="lg">
           <CardBody>
             <VStack spacing={4}>
               <Heading size="lg">Login</Heading>
               <FormControl id="email">
                 <FormLabel>Email</FormLabel>
+                <input
+                  type="hidden"
+                  name="favorite_color"
+                  value=""
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
                 <Input
                   type="email"
                   placeholder="louis.lafoe@gmail.com"
