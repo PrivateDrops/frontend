@@ -254,7 +254,8 @@ const UploadPage = () => {
                 >
                   {loading ? (
                     <>
-                      <Spinner /> Uploading...
+                      <Spinner />
+                      &nbsp;Uploading...
                     </>
                   ) : (
                     'Upload'

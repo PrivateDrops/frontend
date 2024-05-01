@@ -10,6 +10,7 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  Icon,
   Input,
   Text,
   VStack,
@@ -18,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import { AppContext } from '../context';
 import { sendPostRequest } from '../lib/request';
+import { FaCheck } from 'react-icons/fa6';
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>('');
@@ -70,7 +72,7 @@ const LoginPage = () => {
         justifyContent="center"
         minHeight="100vh"
       >
-        <Card maxW="sm" w="full" boxShadow="xl" borderRadius="lg">
+        <Card maxW="md" w="full" boxShadow="xl" borderRadius="lg">
           <CardBody>
             <VStack spacing={4}>
               <Heading size="lg">Login</Heading>
@@ -78,12 +80,13 @@ const LoginPage = () => {
                 <FormLabel>Email</FormLabel>
                 <Input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="louis.defoe@gmail.com"
                   isDisabled={sent}
                   onChange={(e) => setEmail(e.target.value.toLowerCase())}
                 />
                 <FormHelperText>
-                  By logging in you accept our{' '}
+                  <Icon as={FaCheck} />
+                  &nbsp;By logging in you accept our&nbsp;
                   <Text as="a" fontWeight={'bold'} href="/tos">
                     ToS
                   </Text>

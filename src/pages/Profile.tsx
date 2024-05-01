@@ -102,12 +102,11 @@ const ProfilePage = () => {
                 <List spacing={4}>
                   <ListItem>
                     <Text fontSize="lg">
-                      Avg Rating:{' '}
+                      Avg Rating:&nbsp;
                       <Text as="span" fontWeight="bold">
                         {averageRating.toFixed(2)}
                         <small style={{ fontSize: 'sm', fontWeight: 'normal' }}>
-                          {' '}
-                          over {user.ratings.length} reviews
+                          &nbsp; over {user.ratings.length} reviews
                         </small>
                       </Text>
                     </Text>

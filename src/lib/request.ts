@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL;
+axios.defaults.timeout = 10000;
 
 const processError = (error: any) => {
   const errorMessage = error.message || 'Unexpected error occurred';

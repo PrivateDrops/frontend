@@ -90,6 +90,7 @@ const ViewPage = () => {
               ratings: response.owner.ratings,
             },
           });
+          setHide(response.hasPaid);
 
           if (
             response.singleView &&
@@ -261,7 +262,7 @@ const ViewPage = () => {
             <ModalCloseButton />
             <ModalBody p={6}>
               <Box>
-                Sent by:{' '}
+                Sent by:&nbsp;
                 <Text as="span" fontWeight="bold">
                   {media.owner.nickname || 'Anon'}
                 </Text>
@@ -285,7 +286,7 @@ const ViewPage = () => {
                 )}
               </Box>
               <Box mt={2}>
-                View:{' '}
+                View:&nbsp;
                 <Text as="span" fontWeight="bold">
                   {media.singleView ? 'one time' : 'unlimited'}
                 </Text>

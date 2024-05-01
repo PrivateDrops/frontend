@@ -6,6 +6,7 @@ import {
   Stack,
   Icon,
   createIcon,
+  Show,
 } from '@chakra-ui/react';
 
 const Arrow = createIcon({
@@ -40,20 +41,23 @@ const HomePage = () => {
           as={Box}
           textAlign={'center'}
           spacing={{ base: 8, md: 14 }}
-          py={{ base: 20, md: 36 }}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
         >
           <Heading
             as="h1"
             color={'gray.200'}
             fontWeight={600}
-            fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
+            fontSize={{ base: '6xl', md: '8xl' }}
             lineHeight={'110%'}
             id="title"
           >
-            Make money from <br />
             <Text as={'span'} color={'green.300'}>
-              your audience
+              Make money
             </Text>
+            <Text>from your pics</Text>
           </Heading>
           <Heading
             as="h2"
@@ -77,34 +81,37 @@ const HomePage = () => {
               colorScheme={'green'}
               bg={'green.400'}
               px={12}
+              size="lg"
               _hover={{
                 bg: 'green.500',
               }}
             >
               Get Started
             </Button>
-            <Box>
-              <Icon
-                as={Arrow}
-                color={'gray.200'}
-                w={65}
-                position={'absolute'}
-                right={-65}
-                top={'10px'}
-              />
-              <Text
-                id="subtitle"
-                color={'gray.200'}
-                fontSize={'lg'}
-                fontFamily={'Caveat'}
-                position={'absolute'}
-                right={'-155px'}
-                top={'-15px'}
-                transform={'rotate(10deg)'}
-              >
-                No documents needed!
-              </Text>
-            </Box>
+            <Show above="md">
+              <Box>
+                <Icon
+                  as={Arrow}
+                  color={'gray.200'}
+                  w={65}
+                  position={'absolute'}
+                  right={-65}
+                  top={'10px'}
+                />
+                <Text
+                  id="subtitle"
+                  color={'gray.200'}
+                  fontSize={'xl'}
+                  fontFamily={'Caveat'}
+                  position={'absolute'}
+                  right={'-155px'}
+                  top={'-15px'}
+                  transform={'rotate(10deg)'}
+                >
+                  Start earning now!
+                </Text>
+              </Box>
+            </Show>
           </Stack>
         </Stack>
       </Box>

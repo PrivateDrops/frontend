@@ -17,7 +17,7 @@ export const ResponsiveCard = ({ children }: { children: ReactNode }) => {
       maxH={{ base: 'sm', md: 'md', lg: 'lg' }}
       direction="column"
       variant="outline"
-      borderRadius="md"
+      borderRadius="xl"
     >
       {children}
     </Card>
