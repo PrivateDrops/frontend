@@ -28,7 +28,7 @@ const LoginPage = () => {
   const [sent, setEmailSent] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const { accessToken } = useContext(AppContext);
-  const recaptchaRef = useRef();
+  const recaptchaRef = useRef<any>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,6 +59,8 @@ const LoginPage = () => {
     }
 
     if (!isValidEmail) return;
+
+    recaptchaRef.current.execute();
 
     const { success } = await sendPostRequest(
       'auth/login',
