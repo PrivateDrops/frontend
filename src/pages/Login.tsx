@@ -80,7 +80,7 @@ const LoginPage = () => {
                 <FormLabel>Email</FormLabel>
                 <Input
                   type="email"
-                  placeholder="louis.defoe@gmail.com"
+                  placeholder="louis.lafoe@gmail.com"
                   isDisabled={sent}
                   onChange={(e) => setEmail(e.target.value.toLowerCase())}
                 />

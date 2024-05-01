@@ -9,6 +9,7 @@ import {
   useToast,
   Divider,
 } from '@chakra-ui/react';
+import ReactTimeAgo from 'react-time-ago';
 import { FooterMenu } from '../components/FooterMenu';
 import { Auth } from './Auth';
 import { sendDeleteRequest, sendGetRequest } from '../lib/request';
@@ -27,6 +28,7 @@ const MediaPage = () => {
       const { response, success } = await sendGetRequest('media', accessToken);
       if (!success) return;
       setMedia(response);
+      console.log(response);
     };
 
     load();
@@ -83,8 +85,7 @@ const MediaPage = () => {
                     {m.totalViews} <small>views</small>
                   </Text>
                   <Text fontSize={{ base: 'md', md: 'lg' }}>
-                    {(m.earnings / 100).toFixed(2)}
-                    {m.currency == 'eur' ? '€' : '$'} <small>earned</small>
+                    <ReactTimeAgo date={new Date(m.updatedAt)} locale="en-US" />
                   </Text>
                 </VStack>
                 <VStack spacing={4}>

@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
 import { Providers } from './Providers.tsx';
 import LandingPage from './pages/Landing.tsx';
 import UploadPage from './pages/Upload.tsx';
@@ -10,8 +12,8 @@ import LoginPage from './pages/Login.tsx';
 import ViewPage from './pages/View.tsx';
 import InterceptLogin from './pages/InterceptLogin.tsx';
 import InterceptPayment from './pages/InterceptPayment.tsx';
-import './index.css';
 import ErrorPage from './pages/Error.tsx';
+import './index.css';
 
 const router = createBrowserRouter([
   {
@@ -51,7 +53,7 @@ const router = createBrowserRouter([
     element: <ErrorPage />,
   },
 ]);
-
+TimeAgo.addDefaultLocale(en);
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Providers>

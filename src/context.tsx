@@ -19,6 +19,10 @@ export const AppContext = createContext({
   saveNickname: (val: string) => {
     val;
   },
+  currency: '',
+  saveCurrency: (val: string) => {
+    val;
+  },
   clear: () => {},
 });
 
@@ -29,6 +33,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [id, setId] = useState<string>(localStorage.getItem('id') || '');
   const [nickname, setNickname] = useState<string>(
     localStorage.getItem('nickname') || '',
+  );
+  const [currency, setCurrency] = useState<string>(
+    localStorage.getItem('currency') || '',
   );
 
   const saveAccessToken = useCallback((newAccessToken: string) => {
@@ -44,6 +51,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const saveNickname = useCallback((newNickname: string) => {
     localStorage.setItem('nickname', newNickname);
     setNickname(newNickname);
+  }, []);
+
+  const saveCurrency = useCallback((newCurrency: string) => {
+    localStorage.setItem('currency', newCurrency);
+    setCurrency(newCurrency);
   }, []);
 
   const clear = useCallback(() => {
@@ -63,9 +75,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       saveId,
       nickname,
       saveNickname,
+      currency,
+      saveCurrency,
       clear,
     }),
-    [accessToken, id, nickname],
+    [accessToken, id, nickname, currency],
   );
 
   return (

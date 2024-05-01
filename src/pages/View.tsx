@@ -30,6 +30,7 @@ import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { StarRating } from '../components/StarRating';
 import { MediaProtectionLayer } from '../components/MediaOverlay';
+import { valueFormatter } from '../lib/helpers';
 
 type Media = {
   id: string;
@@ -189,7 +190,7 @@ const ViewPage = () => {
                       ) : (
                         <>
                           <Text fontSize="5xl" fontWeight="bold" color="white">
-                            {media.price.toFixed(2)}€
+                            {valueFormatter(media.price, media.currency)}
                           </Text>
                           <Button
                             mt={4}
@@ -244,6 +245,7 @@ const ViewPage = () => {
               icon={<FaInfoCircle size="30px" />}
               onClick={onOpen}
               _hover={{ bg: 'transparent' }}
+              color="black"
             />
           </Stack>
         </VStack>
