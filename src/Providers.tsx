@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import * as Sentry from '@sentry/react';
 import { AppProvider } from './context';
 
 const config = {
@@ -10,8 +11,13 @@ export const Providers = ({ children }: { children: ReactNode }) => {
   const theme = extendTheme({ config });
 
   return (
-    <ChakraProvider theme={theme}>
-      <AppProvider>{children}</AppProvider>
-    </ChakraProvider>
+    <Sentry.ErrorBoundary
+      fallback={<p>An error occurred, please retry!</p>}
+      showDialog
+    >
+      <ChakraProvider theme={theme}>
+        <AppProvider>{children}</AppProvider>
+      </ChakraProvider>
+    </Sentry.ErrorBoundary>
   );
 };

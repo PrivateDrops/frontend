@@ -27,10 +27,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaInfoCircle } from 'react-icons/fa';
 import { sendGetRequest, sendPostRequest } from '../lib/request';
+import { valueFormatter } from '../lib/helpers';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { StarRating } from '../components/StarRating';
 import { MediaProtectionLayer } from '../components/MediaOverlay';
-import { valueFormatter } from '../lib/helpers';
 
 type Media = {
   id: string;
