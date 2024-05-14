@@ -1,8 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createRoutesFromChildren,
+  matchRoutes,
+  useLocation,
+  useNavigationType,
+} from 'react-router-dom';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import * as Sentry from '@sentry/react';
 import { Providers } from './Providers.tsx';
 import LandingPage from './pages/Landing.tsx';
 import UploadPage from './pages/Upload.tsx';
@@ -16,7 +24,35 @@ import ErrorPage from './pages/Error.tsx';
 import './index.css';
 import PrivateRoute from './private.route.tsx';
 
-const router = createBrowserRouter([
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  integrations: [
+    Sentry.browserTracingIntegration({}),
+    Sentry.reactRouterV6BrowserTracingIntegration({
+      useEffect: React.useEffect,
+      useLocation,
+      useNavigationType,
+      createRoutesFromChildren,
+      matchRoutes,
+    }),
+    Sentry.replayIntegration(),
+  ],
+
+  // Captures 75% transactions for performance monitoring
+  tracesSampleRate: 0.75,
+
+  // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+  tracePropagationTargets: ['localhost', 'privatedrops.me'],
+
+  // Capture Replay for 100% of all sessions,
+  // and for 100% of sessions with an error
+  replaysSessionSampleRate: 1.0,
+  replaysOnErrorSampleRate: 1.0,
+});
+
+const sentryCreateBrowserRouter =
+  Sentry.wrapCreateBrowserRouter(createBrowserRouter);
+const router = sentryCreateBrowserRouter([
   {
     path: '/',
     element: <LandingPage />,
