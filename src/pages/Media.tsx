@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   HStack,
   IconButton,
@@ -13,14 +13,14 @@ import ReactTimeAgo from 'react-time-ago';
 import { FooterMenu } from '../components/FooterMenu';
 import { Auth } from './Auth';
 import { sendDeleteRequest, sendGetRequest } from '../lib/request';
-import { AppContext } from '../context';
+import { useAuth } from '../context';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { FaLink, FaTrash } from 'react-icons/fa6';
 import { MediaLoader } from '../components/MediaLoader';
 
 const MediaPage = () => {
   const [media, setMedia] = useState<any[]>([]);
-  const { accessToken } = useContext(AppContext);
+  const { accessToken } = useAuth();
   const toast = useToast();
 
   useEffect(() => {

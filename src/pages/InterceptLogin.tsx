@@ -1,14 +1,13 @@
 import { Center, Heading, Spinner, useToast } from '@chakra-ui/react';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { AppContext } from '../context';
+import { useAuth } from '../context';
 import { sendGetRequest } from '../lib/request';
 
 const InterceptLogin = () => {
   const { nonce } = useParams();
   const navigate = useNavigate();
-  const { accessToken, saveAccessToken, saveId, saveNickname } =
-    useContext(AppContext);
+  const { accessToken, saveAccessToken, saveId, saveNickname } = useAuth();
   const toast = useToast();
 
   useEffect(() => {

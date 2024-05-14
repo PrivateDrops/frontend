@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Editable,
   EditableInput,
@@ -14,7 +14,7 @@ import {
 import { FooterMenu } from '../components/FooterMenu';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { PayoutForm } from '../components/PayoutForm';
-import { AppContext } from '../context';
+import { useAuth } from '../context';
 import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { Auth } from './Auth';
 import { valueFormatter } from '../lib/helpers';
@@ -36,7 +36,7 @@ const ProfilePage = () => {
   const [user, setUser] = useState<User>();
   const [nickname, setNickname] = useState<string>('');
   const [averageRating, setAverageRating] = useState<number>(0);
-  const { accessToken } = useContext(AppContext);
+  const { accessToken } = useAuth();
   const toast = useToast();
 
   useEffect(() => {

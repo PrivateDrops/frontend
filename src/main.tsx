@@ -14,6 +14,7 @@ import InterceptLogin from './pages/InterceptLogin.tsx';
 import InterceptPayment from './pages/InterceptPayment.tsx';
 import ErrorPage from './pages/Error.tsx';
 import './index.css';
+import PrivateRoute from './private.route.tsx';
 
 const router = createBrowserRouter([
   {
@@ -33,20 +34,25 @@ const router = createBrowserRouter([
     element: <InterceptPayment />,
   },
   {
-    path: '/upload',
-    element: <UploadPage />,
-  },
-  {
-    path: '/media',
-    element: <MediaPage />,
-  },
-  {
-    path: '/profile',
-    element: <ProfilePage />,
-  },
-  {
-    path: '/view/:code',
-    element: <ViewPage />,
+    element: <PrivateRoute />,
+    children: [
+      {
+        path: '/upload',
+        element: <UploadPage />,
+      },
+      {
+        path: '/media',
+        element: <MediaPage />,
+      },
+      {
+        path: '/profile',
+        element: <ProfilePage />,
+      },
+      {
+        path: '/view/:code',
+        element: <ViewPage />,
+      },
+    ]
   },
   {
     path: '*',

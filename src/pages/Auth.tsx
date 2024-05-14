@@ -1,11 +1,11 @@
-import { ReactNode, useContext, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Center, Heading, Spinner } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../context';
+import { useAuth } from '../context';
 import { sendGetRequest } from '../lib/request';
 
 export const Auth = ({ children }: { children: ReactNode }) => {
-  const { accessToken, clear } = useContext(AppContext);
+  const { accessToken, clear } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
