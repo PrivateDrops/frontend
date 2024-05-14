@@ -121,7 +121,6 @@ const MediaPage = () => {
           ) : (
             <Flex
               flexDir="column"
-              gap={'5'}
               minH={{ base: 'xs', md: 'sm', lg: 'md' }}
               h={'full'}
               align={'center'}
@@ -134,7 +133,6 @@ const MediaPage = () => {
                 w={'full'}
                 colorScheme="green"
                 onClick={() => navigate('/upload')}
-                ml={4}
               >
                 Create your first upload
               </Button>
