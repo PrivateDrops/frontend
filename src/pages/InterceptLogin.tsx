@@ -33,16 +33,32 @@ const InterceptLogin = () => {
             isClosable: true,
             status: 'success',
           });
-          return;
+
+          navigate('/upload');
+          window.location.reload(); 
+        } else {
+          toast({
+            title: 'Login not successful, please try again',
+            duration: 2000,
+            isClosable: true,
+            status: 'error',
+          });
+
+          navigate('/login');
+          window.location.reload(); 
         }
+      } else {
+        toast({
+          title: 'Login failed',
+          description: 'No code was found',
+          duration: 2000,
+          isClosable: true,
+          status: 'error',
+        });
+
+        navigate('/login');
+        window.location.reload(); 
       }
-      toast({
-        title: 'Invalid code',
-        duration: 2000,
-        isClosable: true,
-        status: 'error',
-      });
-      navigate('/login');
     };
 
     init();

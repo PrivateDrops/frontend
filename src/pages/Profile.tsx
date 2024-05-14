@@ -10,6 +10,7 @@ import {
   Text,
   CardBody,
   useToast,
+  Button,
 } from '@chakra-ui/react';
 import { FooterMenu } from '../components/FooterMenu';
 import { ResponsiveCard } from '../components/ResponsiveCard';
@@ -36,7 +37,7 @@ const ProfilePage = () => {
   const [user, setUser] = useState<User>();
   const [nickname, setNickname] = useState<string>('');
   const [averageRating, setAverageRating] = useState<number>(0);
-  const { accessToken } = useAuth();
+  const { accessToken, clear } = useAuth();
   const toast = useToast();
 
   useEffect(() => {
@@ -87,6 +88,18 @@ const ProfilePage = () => {
         status: 'success',
       });
   };
+
+  const logout = () => {
+    clear();
+    toast({
+      title: 'Logged out',
+      duration: 2000,
+      isClosable: true,
+      status:'success',
+    });
+
+    window.location.href = '/login';
+  }
 
   return (
     <Auth>
@@ -141,6 +154,9 @@ const ProfilePage = () => {
                   </Text>
                 )}
               </VStack>
+              <Button onClick={logout} mt={4} w={'full'}>
+            Logout
+          </Button>
             </CardBody>
           </ResponsiveCard>
           <FooterMenu />
