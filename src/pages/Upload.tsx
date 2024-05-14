@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Box,
   Input,
@@ -24,7 +24,7 @@ import { FooterMenu } from '../components/FooterMenu';
 import { Auth } from './Auth';
 import { sendPostRequestWithFile } from '../lib/request';
 import { ResponsiveCard } from '../components/ResponsiveCard';
-import { AppContext } from '../context';
+import { useAuth } from '../context';
 import { RadioButton } from '../components/RadioButton';
 
 const UploadPage = () => {
@@ -38,7 +38,7 @@ const UploadPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const { onCopy, hasCopied } = useClipboard(url);
-  const { accessToken } = useContext(AppContext);
+  const { accessToken } = useAuth();
 
   const handleOptionChoice = (view: string) => {
     if (view == 'Once') setIsSingleView(true);

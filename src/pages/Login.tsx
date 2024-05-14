@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Button,
@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { FaCheck } from 'react-icons/fa6';
-import { AppContext } from '../context';
+import { useAuth } from '../context';
 import { sendPostRequest } from '../lib/request';
 
 const LoginPage = () => {
@@ -27,7 +27,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState<string>('');
   const [sent, setEmailSent] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const { accessToken } = useContext(AppContext);
+  const { accessToken } = useAuth();
   const recaptchaRef = useRef<any>();
   const navigate = useNavigate();
 

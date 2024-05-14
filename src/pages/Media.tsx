@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   HStack,
   IconButton,
@@ -8,19 +8,21 @@ import {
   Box,
   useToast,
   Divider,
+  Flex,
+  Button,
 } from '@chakra-ui/react';
 import ReactTimeAgo from 'react-time-ago';
 import { FooterMenu } from '../components/FooterMenu';
 import { Auth } from './Auth';
 import { sendDeleteRequest, sendGetRequest } from '../lib/request';
-import { AppContext } from '../context';
+import { useAuth } from '../context';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { FaLink, FaTrash } from 'react-icons/fa6';
 import { MediaLoader } from '../components/MediaLoader';
 
 const MediaPage = () => {
   const [media, setMedia] = useState<any[]>([]);
-  const { accessToken } = useContext(AppContext);
+  const { accessToken } = useAuth();
   const toast = useToast();
 
   useEffect(() => {
@@ -74,7 +76,7 @@ const MediaPage = () => {
     <Auth>
       <ResponsiveCard>
         <Box overflowX="auto" padding="4">
-          {media.map((m, index) => (
+          {media.length ? media.map((m, index) => (
             <Box key={index}>
               <HStack spacing={4} align="stretch" p={4}>
                 <Box width="100px" height="100px" overflow="hidden">
@@ -109,7 +111,12 @@ const MediaPage = () => {
               </HStack>
               {index < media.length - 1 && <Divider />}
             </Box>
-          ))}
+          )) : 
+          <Flex flexDir='column' gap={'5'} minH={{ base: 'xs', md: 'sm', lg: 'md' }} h={'full'} align={'center'} justify={'center'}>
+            <Text fontSize="md" color="gray.500">No media found</Text>
+            <Button w={'full'} colorScheme='green' onClick={() => window.location.href = '/upload'} ml={4}>Create your first upload</Button>
+          </Flex>
+          }
         </Box>
       </ResponsiveCard>
       <FooterMenu />

@@ -2,6 +2,7 @@ import {
   ReactNode,
   createContext,
   useCallback,
+  useContext,
   useMemo,
   useState,
 } from 'react';
@@ -86,3 +87,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     <AppContext.Provider value={providerValue}>{children}</AppContext.Provider>
   );
 };
+
+
+export const useAuth = () => {
+  return useContext(AppContext);
+}
