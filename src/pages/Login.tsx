@@ -28,14 +28,14 @@ const LoginPage = () => {
   const [sent, setEmailSent] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const { accessToken } = useContext(AppContext);
-  const recaptchaRef = useRef<any>();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    let interval: any;
+    let interval: NodeJS.Timeout;
     if (sent && timeLeft > 0) {
       interval = setInterval(() => {
-        setTimeLeft(timeLeft - 1);
+        setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
     } else if (timeLeft === 0) {
       setEmailSent(false);
@@ -53,24 +53,27 @@ const LoginPage = () => {
     return email.length > 2 && validator.isEmail(email);
   };
 
-  const sendEmailCode = async () => {
-    if (honeypot !== '') {
-      return;
-    }
-
-    if (!isValidEmail) return;
-
-    recaptchaRef.current.execute();
-
+  const handleReCAPTCHAChange = async (token: string | null) => {
+    if (!token) return;
     const { success } = await sendPostRequest(
       'auth/login',
-      { email },
+      { email, recaptchaToken: token },
       accessToken,
     );
     if (!success) return;
 
     setEmailSent(true);
     setTimeLeft(60);
+  };
+
+  const sendEmailCode = async () => {
+    if (honeypot !== '') {
+      return;
+    }
+
+    if (!isValidEmail()) return;
+
+    recaptchaRef.current?.execute();
   };
 
   return (
@@ -84,7 +87,8 @@ const LoginPage = () => {
         <ReCAPTCHA
           ref={recaptchaRef}
           size="invisible"
-          sitekey="6Lch2CsUAAAAAHLmH4oypQ886v2500r2mcMLcbLl"
+          sitekey="6LcZF94pAAAAANa1uaHh12BFfRteH4NcldkrAbLP"
+          onChange={handleReCAPTCHAChange}
         />
         <Card maxW="md" w="full" boxShadow="xl" borderRadius="lg">
           <CardBody>
@@ -96,6 +100,7 @@ const LoginPage = () => {
                   type="hidden"
                   name="favorite_color"
                   value=""
+                  aria-hidden="true"
                   onChange={(e) => setHoneypot(e.target.value)}
                 />
                 <Input

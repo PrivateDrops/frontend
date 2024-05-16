@@ -19,7 +19,7 @@ const InterceptLogin = () => {
 
   useEffect(() => {
     const init = async () => {
-      if (nonce) {
+      if (nonce && nonce.length > 5) {
         const { response, success } = await sendGetRequest(
           'auth/login/' + nonce,
           '',
@@ -34,16 +34,28 @@ const InterceptLogin = () => {
             isClosable: true,
             status: 'success',
           });
-          return;
+        } else {
+          toast({
+            title: 'An error occurred',
+            description:
+              response?.error ||
+              response?.message[0] ||
+              "Can't login, please retry",
+            duration: 2000,
+            isClosable: true,
+            status: 'error',
+          });
+          navigate('/login');
         }
+      } else {
+        toast({
+          title: 'Invalid code',
+          duration: 2000,
+          isClosable: true,
+          status: 'error',
+        });
+        navigate('/login');
       }
-      toast({
-        title: 'Invalid code',
-        duration: 2000,
-        isClosable: true,
-        status: 'error',
-      });
-      navigate('/login');
     };
 
     init();
