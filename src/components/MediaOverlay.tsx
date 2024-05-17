@@ -3,15 +3,19 @@ import { Box } from '@chakra-ui/react';
 
 export const MediaProtectionLayer = ({
   enabled,
+  onFullScreenToggle,
   children,
 }: {
   enabled: boolean;
+  onFullScreenToggle?: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => void;
   children: ReactNode;
 }) => {
-  if (enabled)
-    return (
-      <Box position="relative">
-        {children}
+  return (
+    <Box position="relative">
+      {children}
+      {enabled && (
         <Box
           position="absolute"
           top="0"
@@ -19,9 +23,13 @@ export const MediaProtectionLayer = ({
           right="0"
           bottom="0"
           zIndex="2"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            onFullScreenToggle?.(e);
+          }}
+          style={{ cursor: 'pointer' }}
         />
-      </Box>
-    );
-  else return <>{children}</>;
+      )}
+    </Box>
+  );
 };

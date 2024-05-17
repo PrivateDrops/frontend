@@ -23,6 +23,7 @@ import { FooterMenu } from '../components/FooterMenu';
 
 const MediaPage = () => {
   const [media, setMedia] = useState<any[]>([]);
+  const [loaded, setLoaded] = useState<boolean>(false);
   const { accessToken } = useContext(AppContext);
   const toast = useToast();
   const navigate = useNavigate();
@@ -30,9 +31,20 @@ const MediaPage = () => {
   useEffect(() => {
     const load = async () => {
       const { response, success } = await sendGetRequest('media', accessToken);
-      if (!success) return;
-      setMedia(response);
-      console.log(response);
+      if (!success) {
+        toast({
+          title: 'An error occurred',
+          description:
+            response?.error ||
+            response?.message[0] ||
+            'An unexpected error occurred',
+          duration: 3000,
+          status: 'error',
+        });
+      } else {
+        setMedia(response);
+      }
+      setLoaded(true);
     };
 
     load();
@@ -78,65 +90,69 @@ const MediaPage = () => {
     <Auth>
       <ResponsiveCard>
         <Box overflowX="auto" padding="4">
-          {media.length ? (
-            media.map((m, index) => (
-              <Box key={index}>
-                <HStack spacing={4} align="stretch" p={4}>
-                  <Box width="100px" height="100px" overflow="hidden">
-                    <MediaLoader maxW={'100px'} ratio={1} media={m} />
+          {loaded && (
+            <>
+              {media.length ? (
+                media.map((m, index) => (
+                  <Box key={index}>
+                    <HStack spacing={4} align="stretch" p={4}>
+                      <Box width="100px" height="100px" overflow="hidden">
+                        <MediaLoader maxW={'100px'} ratio={1} media={m} />
+                      </Box>
+                      <VStack spacing={4} align="center" flex="1">
+                        <Text fontSize={{ base: 'md', md: 'lg' }}>
+                          {m.totalViews} <small>views</small>
+                        </Text>
+                        <Text fontSize={{ base: 'md', md: 'lg' }}>
+                          <ReactTimeAgo
+                            date={new Date(m.updatedAt)}
+                            locale="en-US"
+                          />
+                        </Text>
+                      </VStack>
+                      <VStack spacing={4}>
+                        <Tooltip label="Copy Link" hasArrow>
+                          <IconButton
+                            icon={<FaLink />}
+                            aria-label="Copy Link"
+                            colorScheme="green"
+                            onClick={() => copyUrl(m.code)}
+                          />
+                        </Tooltip>
+                        <Tooltip label="Delete" hasArrow>
+                          <IconButton
+                            icon={<FaTrash />}
+                            aria-label="Delete"
+                            colorScheme="red"
+                            onClick={() => deleteMedia(m.id)}
+                          />
+                        </Tooltip>
+                      </VStack>
+                    </HStack>
+                    {index < media.length - 1 && <Divider />}
                   </Box>
-                  <VStack spacing={4} align="center" flex="1">
-                    <Text fontSize={{ base: 'md', md: 'lg' }}>
-                      {m.totalViews} <small>views</small>
-                    </Text>
-                    <Text fontSize={{ base: 'md', md: 'lg' }}>
-                      <ReactTimeAgo
-                        date={new Date(m.updatedAt)}
-                        locale="en-US"
-                      />
-                    </Text>
-                  </VStack>
-                  <VStack spacing={4}>
-                    <Tooltip label="Copy Link" hasArrow>
-                      <IconButton
-                        icon={<FaLink />}
-                        aria-label="Copy Link"
-                        colorScheme="green"
-                        onClick={() => copyUrl(m.code)}
-                      />
-                    </Tooltip>
-                    <Tooltip label="Delete" hasArrow>
-                      <IconButton
-                        icon={<FaTrash />}
-                        aria-label="Delete"
-                        colorScheme="red"
-                        onClick={() => deleteMedia(m.id)}
-                      />
-                    </Tooltip>
-                  </VStack>
-                </HStack>
-                {index < media.length - 1 && <Divider />}
-              </Box>
-            ))
-          ) : (
-            <Flex
-              flexDir="column"
-              minH={{ base: 'xs', md: 'sm', lg: 'md' }}
-              h={'full'}
-              align={'center'}
-              justify={'center'}
-            >
-              <Text fontSize="md" color="gray.500">
-                No media found
-              </Text>
-              <Button
-                w={'full'}
-                colorScheme="green"
-                onClick={() => navigate('/upload')}
-              >
-                Create your first upload
-              </Button>
-            </Flex>
+                ))
+              ) : (
+                <Flex
+                  flexDir="column"
+                  minH={{ base: 'xs', md: 'sm', lg: 'md' }}
+                  h={'full'}
+                  align={'center'}
+                  justify={'center'}
+                >
+                  <Text fontSize="md" color="gray.500">
+                    No media found
+                  </Text>
+                  <Button
+                    w={'full'}
+                    colorScheme="green"
+                    onClick={() => navigate('/upload')}
+                  >
+                    Create your first upload
+                  </Button>
+                </Flex>
+              )}
+            </>
           )}
         </Box>
       </ResponsiveCard>

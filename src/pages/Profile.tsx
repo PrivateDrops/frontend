@@ -73,8 +73,8 @@ const ProfilePage = () => {
   };
 
   const updateNickname = async () => {
-    const { success } = await sendPostRequest(
-      'user',
+    const { response, success } = await sendPostRequest(
+      'user/nickname',
       { nickname },
       accessToken,
     );
@@ -85,6 +85,17 @@ const ProfilePage = () => {
         duration: 2000,
         isClosable: true,
         status: 'success',
+      });
+    else
+      toast({
+        title: 'Update nickname failed',
+        description:
+          response?.error ||
+          response?.message[0] ||
+          'An unexpected error occurred',
+        duration: 2000,
+        isClosable: true,
+        status: 'error',
       });
   };
 

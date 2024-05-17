@@ -53,27 +53,20 @@ const LoginPage = () => {
     return email.length > 2 && validator.isEmail(email);
   };
 
-  const handleReCAPTCHAChange = async (token: string | null) => {
-    if (!token) return;
+  const sendEmailCode = async () => {
+    if (honeypot !== '' || !isValidEmail()) {
+      return;
+    }
+    recaptchaRef.current?.execute();
     const { success } = await sendPostRequest(
       'auth/login',
-      { email, recaptchaToken: token },
+      { email },
       accessToken,
     );
     if (!success) return;
 
     setEmailSent(true);
     setTimeLeft(60);
-  };
-
-  const sendEmailCode = async () => {
-    if (honeypot !== '') {
-      return;
-    }
-
-    if (!isValidEmail()) return;
-
-    recaptchaRef.current?.execute();
   };
 
   return (
@@ -88,7 +81,6 @@ const LoginPage = () => {
           ref={recaptchaRef}
           size="invisible"
           sitekey="6LcZF94pAAAAANa1uaHh12BFfRteH4NcldkrAbLP"
-          onChange={handleReCAPTCHAChange}
         />
         <Card maxW="md" w="full" boxShadow="xl" borderRadius="lg">
           <CardBody>

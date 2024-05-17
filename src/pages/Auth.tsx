@@ -38,27 +38,6 @@ export const Auth = ({ children }: { children: ReactNode }) => {
     }
   }, [accessToken, clear, navigate]);
 
-  if (loading) {
-    return (
-      <Center h="100vh" flexDirection="column">
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal.500"
-          size="xl"
-        />
-        <Heading size="md" mt="4">
-          Checking Authentication...
-        </Heading>
-      </Center>
-    );
-  }
-
-  if (!accessToken) {
-    return null;
-  }
-
   return (
     <Center h="100vh" flexDirection="column">
       {children}

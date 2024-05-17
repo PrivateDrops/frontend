@@ -151,13 +151,26 @@ const ViewPage = () => {
     if (success) localStorage.setItem('userRating_' + code, String(n));
   };
 
+  const handleFullScreen = (event: React.MouseEvent<HTMLDivElement>) => {
+    const element =
+      event.currentTarget.parentElement?.querySelector('img, iframe');
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      element?.requestFullscreen();
+    }
+  };
+
   return (
     <Center h="100vh" flexDirection="column" bg="gray.100">
       <Skeleton isLoaded={!loading} borderRadius="md">
         <ResponsiveCard>
           {media && media.url && (
             <>
-              <MediaProtectionLayer enabled={media.viewer.hasPaid}>
+              <MediaProtectionLayer
+                enabled={media.viewer.hasPaid}
+                onFullScreenToggle={handleFullScreen}
+              >
                 <AspectRatio maxW="500px" ratio={1}>
                   {media.mime.includes('image') ? (
                     <Image src={media.url} onLoad={() => setLoading(false)} />
@@ -167,6 +180,7 @@ const ViewPage = () => {
                       src={media.url}
                       onLoad={() => setLoading(false)}
                       allowFullScreen
+                      style={{ cursor: 'zoom-in' }}
                     />
                   )}
                 </AspectRatio>
