@@ -14,6 +14,7 @@ import {
   Input,
   Text,
   VStack,
+  useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
@@ -30,6 +31,7 @@ const LoginPage = () => {
   const { accessToken } = useContext(AppContext);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -58,16 +60,28 @@ const LoginPage = () => {
       return;
     }
     const token = await recaptchaRef.current?.executeAsync();
-    const { success } = await sendPostRequest(
+    const { success, response } = await sendPostRequest(
       'auth/login',
       { email },
       accessToken,
       { recaptcha: token },
     );
-    if (!success) return;
-
-    setEmailSent(true);
-    setTimeLeft(60);
+    if (success) {
+      setEmailSent(true);
+      setTimeLeft(60);
+    } else {
+      console.log('response', response);
+      toast({
+        title: 'Login failed',
+        description:
+          response?.error ||
+          (response?.message && response?.message[0]) ||
+          response,
+        duration: 2000,
+        isClosable: true,
+        status: 'error',
+      });
+    }
   };
 
   return (
