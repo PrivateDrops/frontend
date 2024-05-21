@@ -32,12 +32,14 @@ export const sendPostRequest = async (
   endpoint: string,
   body: any,
   accessToken: string = '',
+  headers: any = null
 ) => {
   try {
     const response = await axios.post(`${BACKEND}/${endpoint}`, body, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
+        ...headers,
       },
     });
 

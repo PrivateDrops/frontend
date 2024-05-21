@@ -57,11 +57,12 @@ const LoginPage = () => {
     if (honeypot !== '' || !isValidEmail()) {
       return;
     }
-    recaptchaRef.current?.execute();
+    const token = await recaptchaRef.current?.executeAsync();
     const { success } = await sendPostRequest(
       'auth/login',
       { email },
       accessToken,
+      { 'recaptcha': token }
     );
     if (!success) return;
 
