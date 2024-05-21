@@ -62,7 +62,7 @@ const LoginPage = () => {
       'auth/login',
       { email },
       accessToken,
-      { 'recaptcha': token }
+      { recaptcha: token },
     );
     if (!success) return;
 
@@ -81,7 +81,7 @@ const LoginPage = () => {
         <ReCAPTCHA
           ref={recaptchaRef}
           size="invisible"
-          sitekey="6LcZF94pAAAAANa1uaHh12BFfRteH4NcldkrAbLP"
+          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
         />
         <Card maxW="md" w="full" boxShadow="xl" borderRadius="lg">
           <CardBody>

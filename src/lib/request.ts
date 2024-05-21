@@ -32,7 +32,7 @@ export const sendPostRequest = async (
   endpoint: string,
   body: any,
   accessToken: string = '',
-  headers: any = null
+  headers: any = null,
 ) => {
   try {
     const response = await axios.post(`${BACKEND}/${endpoint}`, body, {
