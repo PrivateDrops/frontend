@@ -224,7 +224,7 @@ const ViewPage = () => {
             </>
           )}
         </ResponsiveCard>
-        {media && userRating == 0 && media.viewer.hasPaid && !hide && (
+        {media && userRating == 0 && media.viewer.hasPaid && !media.viewer.leftFeedback && !hide && (
           <VStack position="absolute" top="0" p={4}>
             <Box p={4} bg="white" borderRadius="lg" shadow="md" width="full">
               <HStack>
