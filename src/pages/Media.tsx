@@ -71,7 +71,7 @@ const MediaPage = () => {
       toast({
         title: 'Media deletion failed',
         description: response?.error || 'An unexpected error occurred',
-        duration: 2000,
+        duration: 3000,
         isClosable: true,
         status: 'error',
       });

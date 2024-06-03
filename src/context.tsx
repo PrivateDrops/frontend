@@ -6,21 +6,38 @@ import {
   useState,
 } from 'react';
 
+export type User = {
+  id: string;
+  nickname?: string;
+  email: string;
+  currency: string;
+  stripeVerified: boolean;
+  banned: boolean;
+  payouts: number;
+  ratings: number[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+const defaultUser: User = {
+  id: '',
+  email: '',
+  currency: '',
+  stripeVerified: false,
+  banned: false,
+  payouts: 0,
+  ratings: [],
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
 export const AppContext = createContext({
   accessToken: '',
   saveAccessToken: (val: string) => {
     val;
   },
-  id: '',
-  saveId: (val: string) => {
-    val;
-  },
-  nickname: '',
-  saveNickname: (val: string) => {
-    val;
-  },
-  currency: '',
-  saveCurrency: (val: string) => {
+  user: defaultUser,
+  saveUser: (val: User) => {
     val;
   },
   clear: () => {},
@@ -30,12 +47,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string>(
     localStorage.getItem('accessToken') || '',
   );
-  const [id, setId] = useState<string>(localStorage.getItem('id') || '');
-  const [nickname, setNickname] = useState<string>(
-    localStorage.getItem('nickname') || '',
-  );
-  const [currency, setCurrency] = useState<string>(
-    localStorage.getItem('currency') || '',
+  const [user, setUser] = useState<User>(
+    JSON.parse(localStorage.getItem('user') || JSON.stringify(defaultUser)),
   );
 
   const saveAccessToken = useCallback((newAccessToken: string) => {
@@ -43,43 +56,27 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setAccessToken(newAccessToken);
   }, []);
 
-  const saveId = useCallback((newId: string) => {
-    localStorage.setItem('id', newId);
-    setId(newId);
-  }, []);
-
-  const saveNickname = useCallback((newNickname: string) => {
-    localStorage.setItem('nickname', newNickname);
-    setNickname(newNickname);
-  }, []);
-
-  const saveCurrency = useCallback((newCurrency: string) => {
-    localStorage.setItem('currency', newCurrency);
-    setCurrency(newCurrency);
+  const saveUser = useCallback((user: User) => {
+    localStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
   }, []);
 
   const clear = useCallback(() => {
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('id');
-    localStorage.removeItem('nickname');
+    localStorage.removeItem('user');
     setAccessToken('');
-    setId('');
-    setNickname('');
+    setUser(defaultUser);
   }, []);
 
   const providerValue = useMemo(
     () => ({
       accessToken,
       saveAccessToken,
-      id,
-      saveId,
-      nickname,
-      saveNickname,
-      currency,
-      saveCurrency,
+      user,
+      saveUser,
       clear,
     }),
-    [accessToken, id, nickname, currency],
+    [accessToken, user],
   );
 
   return (

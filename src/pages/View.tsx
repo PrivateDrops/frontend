@@ -76,7 +76,7 @@ const ViewPage = () => {
           setMedia({
             id: response.id,
             code: response.code,
-            price: response.price / 100,
+            price: response.price,
             currency: response.currency,
             url: response.url,
             singleView: response.singleView,
@@ -107,7 +107,7 @@ const ViewPage = () => {
               response?.error ||
               response?.message[0] ||
               'An unexpected error occurred',
-            duration: 2000,
+            duration: 3000,
             isClosable: true,
             status: 'error',
           });
@@ -134,7 +134,7 @@ const ViewPage = () => {
           response?.error ||
           response?.message[0] ||
           'An unexpected error occurred',
-        duration: 2000,
+        duration: 3000,
         isClosable: true,
         status: 'error',
       });
@@ -224,21 +224,25 @@ const ViewPage = () => {
             </>
           )}
         </ResponsiveCard>
-        {media && userRating == 0 && media.viewer.hasPaid && !media.viewer.leftFeedback && !hide && (
-          <VStack position="absolute" top="0" p={4}>
-            <Box p={4} bg="white" borderRadius="lg" shadow="md" width="full">
-              <HStack>
-                <StarRating
-                  rating={userRating}
-                  setRating={leaveFeedback}
-                  count={5}
-                  size={24}
-                />
-                <CloseButton size="sm" onClick={() => setHide(true)} />
-              </HStack>
-            </Box>
-          </VStack>
-        )}
+        {media &&
+          userRating == 0 &&
+          media.viewer.hasPaid &&
+          !media.viewer.leftFeedback &&
+          !hide && (
+            <VStack position="absolute" top="0" p={4}>
+              <Box p={4} bg="white" borderRadius="lg" shadow="md" width="full">
+                <HStack>
+                  <StarRating
+                    rating={userRating}
+                    setRating={leaveFeedback}
+                    count={5}
+                    size={24}
+                  />
+                  <CloseButton size="sm" onClick={() => setHide(true)} />
+                </HStack>
+              </Box>
+            </VStack>
+          )}
         <VStack
           justifyContent="center"
           position="absolute"

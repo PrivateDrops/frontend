@@ -22,6 +22,7 @@ import InterceptLogin from './pages/InterceptLogin.tsx';
 import InterceptPayment from './pages/InterceptPayment.tsx';
 import ErrorPage from './pages/Error.tsx';
 import './index.css';
+import BannedPage from './pages/Banned.tsx';
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -63,6 +64,10 @@ const router = sentryCreateBrowserRouter([
   {
     path: '/login/:nonce',
     element: <InterceptLogin />,
+  },
+  {
+    path: '/banned',
+    element: <BannedPage />,
   },
   {
     path: '/payment',

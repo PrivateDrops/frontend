@@ -70,14 +70,13 @@ const LoginPage = () => {
       setEmailSent(true);
       setTimeLeft(60);
     } else {
-      console.log('response', response);
       toast({
         title: 'Login failed',
         description:
           response?.error ||
           (response?.message && response?.message[0]) ||
           response,
-        duration: 2000,
+        duration: 3000,
         isClosable: true,
         status: 'error',
       });

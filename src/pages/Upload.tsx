@@ -56,7 +56,7 @@ const UploadPage = () => {
   const isValidPrice = (): boolean => {
     if (price == '') return true;
     const num = parseFloat(price);
-    return !isNaN(num) && num >= 0.99 && num <= 500.0;
+    return !isNaN(num) && num >= 5.0 && num <= 500.0;
   };
 
   const handleIconClick = () => {
@@ -125,7 +125,7 @@ const UploadPage = () => {
           response?.error ||
           response?.message[0] ||
           'An unexpected error occurred',
-        duration: 2000,
+        duration: 3000,
         isClosable: true,
         status: 'error',
       });
@@ -207,7 +207,7 @@ const UploadPage = () => {
                     textColor={isValidPrice() ? 'gray.500' : 'red.500'}
                   />
                   <FormErrorMessage textAlign="center">
-                    Invalid price. Must be between 0.99 and 500.00, up to 2
+                    Invalid price. Must be between 5.00 and 500.00, up to 2
                     decimal places.
                   </FormErrorMessage>
                 </FormControl>

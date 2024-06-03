@@ -10,38 +10,39 @@ import {
   Text,
   CardBody,
   useToast,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  Badge,
 } from '@chakra-ui/react';
 import { FooterMenu } from '../components/FooterMenu';
 import { ResponsiveCard } from '../components/ResponsiveCard';
-import { PayoutForm } from '../components/PayoutForm';
 import { AppContext } from '../context';
 import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { Auth } from './Auth';
 import { valueFormatter } from '../lib/helpers';
 
-export type User = {
-  id: string;
-  nickname?: string;
-  email: string;
-  currency: string;
-  stripeVerified: boolean;
-  banned: boolean;
-  payouts: number;
-  ratings: number[];
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 const ProfilePage = () => {
-  const [user, setUser] = useState<User>();
   const [nickname, setNickname] = useState<string>('');
   const [averageRating, setAverageRating] = useState<number>(0);
-  const { accessToken } = useContext(AppContext);
+  const [balanceAvailable, setBalanceAvailable] = useState<number>(0);
+  const [balancePending, setBalancePending] = useState<number>(0);
+  const [balanceTransactions, setBalanceTransactions] = useState<any[]>([]);
+  const { accessToken, user } = useContext(AppContext);
   const toast = useToast();
 
   useEffect(() => {
     const load = async () => {
-      const { response, success } = await sendGetRequest('user', accessToken);
+      setAverageRating(calculateAverage(user.ratings));
+
+      const { response, success } = await sendGetRequest(
+        'payment/payouts',
+        accessToken,
+      );
       if (!success) {
         toast({
           title: 'Error getting user data',
@@ -49,20 +50,34 @@ const ProfilePage = () => {
             response?.error ||
             response?.message[0] ||
             'An unexpected error occurred',
-          duration: 2000,
+          duration: 3000,
           isClosable: true,
           status: 'error',
         });
         return;
-      }
+      } else {
+        const totalAmount = response.balanceInfo.available.reduce(
+          (total: number, item: any) => {
+            return total + item.amount;
+          },
+          0,
+        );
+        const totalPendingAmount = response.balanceInfo.pending.reduce(
+          (total: number, item: any) => {
+            return total + item.amount;
+          },
+          0,
+        );
 
-      setUser(response);
-      setNickname(response.nickname);
-      setAverageRating(calculateAverage(response.ratings));
+        setBalanceAvailable(totalAmount);
+        setBalancePending(totalPendingAmount);
+        setBalanceTransactions(response.balanceTransactions.data);
+        console.log(response.balanceTransactions.data);
+      }
     };
 
-    load();
-  }, []);
+    if (user.id != '') load();
+  }, [user]);
 
   const calculateAverage = (ratings: number[]) => {
     if (ratings.length === 0) {
@@ -93,7 +108,7 @@ const ProfilePage = () => {
           response?.error ||
           response?.message[0] ||
           'An unexpected error occurred',
-        duration: 2000,
+        duration: 3000,
         isClosable: true,
         status: 'error',
       });
@@ -101,7 +116,7 @@ const ProfilePage = () => {
 
   return (
     <Auth>
-      {user && (
+      {user.id != '' && (
         <>
           <ResponsiveCard>
             <CardBody>
@@ -111,7 +126,7 @@ const ProfilePage = () => {
                   fontSize="2xl"
                   defaultValue="Click to add nickname"
                   textAlign="center"
-                  value={nickname}
+                  value={user.nickname}
                   onSubmit={updateNickname}
                   onChange={(value) => setNickname(value)}
                   autoCapitalize="false"
@@ -127,30 +142,60 @@ const ProfilePage = () => {
                       Avg Rating:&nbsp;
                       <Text as="span" fontWeight="bold">
                         {averageRating.toFixed(2)}
-                        <small style={{ fontSize: 'sm', fontWeight: 'normal' }}>
-                          &nbsp; over {user.ratings.length} reviews
-                        </small>
                       </Text>
+                      <small>&nbsp;over {user.ratings.length} reviews</small>
                     </Text>
                   </ListItem>
                   <ListItem>
                     <Text fontSize="lg">
                       Balance:&nbsp;
                       <Text as="span" fontWeight="bold">
-                        {valueFormatter(user.payouts / 100, user.currency)}
+                        {valueFormatter(
+                          balancePending + balanceAvailable,
+                          user.currency,
+                        )}
                       </Text>
+                      <small>
+                        &nbsp;of which{' '}
+                        {valueFormatter(balanceAvailable, user.currency)}{' '}
+                        available
+                      </small>
                     </Text>
                   </ListItem>
                 </List>
                 <Divider />
-                {user.payouts > 2000 ? (
-                  <PayoutForm accessToken={accessToken} user={user} />
-                ) : (
-                  <Text fontWeight={'bold'} colorScheme={'yellow.400'}>
-                    Need to have at least {valueFormatter(20, user.currency)} to
-                    request a payout
-                  </Text>
-                )}
+                <TableContainer>
+                  <Table size="sm">
+                    <Thead>
+                      <Tr>
+                        <Th>Status</Th>
+                        <Th>Amount</Th>
+                        <Th>Unlock time</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {balanceTransactions.map((tx: any, index: number) => (
+                        <Tr key={index}>
+                          <Td>
+                            <Badge
+                              colorScheme={
+                                tx.status == 'pending' ? 'yellow' : 'green'
+                              }
+                            >
+                              {tx.status}
+                            </Badge>
+                          </Td>
+                          <Td>{valueFormatter(tx.net, tx.currency)}</Td>
+                          <Td>
+                            {new Date(
+                              tx.available_on * 1000,
+                            ).toLocaleDateString()}
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
               </VStack>
             </CardBody>
           </ResponsiveCard>

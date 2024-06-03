@@ -7,8 +7,7 @@ import { sendGetRequest } from '../lib/request';
 const InterceptLogin = () => {
   const { nonce } = useParams();
   const navigate = useNavigate();
-  const { accessToken, saveAccessToken, saveId, saveNickname } =
-    useContext(AppContext);
+  const { accessToken, saveAccessToken } = useContext(AppContext);
   const toast = useToast();
 
   useEffect(() => {
@@ -25,15 +24,23 @@ const InterceptLogin = () => {
           '',
         );
         if (success) {
-          saveId(response.id);
-          saveAccessToken(response.accessToken);
-          saveNickname(response.nickname);
-          toast({
-            title: 'Login successful',
-            duration: 2000,
-            isClosable: true,
-            status: 'success',
-          });
+          if (response.banned) {
+            toast({
+              title: 'Banned',
+              duration: 3000,
+              isClosable: true,
+              status: 'error',
+            });
+            navigate('/banned');
+          } else {
+            saveAccessToken(response.accessToken);
+            toast({
+              title: 'Login successful',
+              duration: 2000,
+              isClosable: true,
+              status: 'success',
+            });
+          }
         } else {
           toast({
             title: 'An error occurred',
@@ -41,7 +48,7 @@ const InterceptLogin = () => {
               response?.error ||
               response?.message[0] ||
               "Can't login, please retry",
-            duration: 2000,
+            duration: 3000,
             isClosable: true,
             status: 'error',
           });
@@ -50,7 +57,7 @@ const InterceptLogin = () => {
       } else {
         toast({
           title: 'Invalid code',
-          duration: 2000,
+          duration: 3000,
           isClosable: true,
           status: 'error',
         });
@@ -59,7 +66,7 @@ const InterceptLogin = () => {
     };
 
     init();
-  }, [nonce, navigate, toast, saveAccessToken, saveId, saveNickname]);
+  }, [nonce, navigate, toast, saveAccessToken]);
 
   return (
     <Center h="100vh" flexDirection="column">
