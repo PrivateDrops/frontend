@@ -23,6 +23,7 @@ import InterceptPayment from './pages/InterceptPayment.tsx';
 import ErrorPage from './pages/Error.tsx';
 import BannedPage from './pages/Banned.tsx';
 import InterceptVerifcation from './pages/InterceptVerifcation.tsx';
+import OnboardingPage from './pages/Onboarding.tsx';
 import './index.css';
 
 Sentry.init({
@@ -73,6 +74,10 @@ const router = sentryCreateBrowserRouter([
   {
     path: '/banned',
     element: <BannedPage />,
+  },
+  {
+    path: '/onboarding',
+    element: <OnboardingPage />,
   },
   {
     path: '/payment',

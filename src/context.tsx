@@ -11,6 +11,7 @@ export type User = {
   nickname?: string;
   email: string;
   currency: string;
+  stripeAccountId: string;
   stripeVerified: boolean;
   banned: boolean;
   payouts: number;
@@ -23,6 +24,7 @@ const defaultUser: User = {
   id: '',
   email: '',
   currency: '',
+  stripeAccountId: '',
   stripeVerified: false,
   banned: false,
   payouts: 0,
