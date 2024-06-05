@@ -54,7 +54,6 @@ type Media = {
 const ViewPage = () => {
   const [media, setMedia] = useState<Media>();
   const [hide, setHide] = useState<boolean>(false);
-  const [expired, setExpired] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
   const { code } = useParams();
@@ -92,14 +91,6 @@ const ViewPage = () => {
             },
           });
           setHide(response.hasPaid);
-
-          if (
-            response.singleView &&
-            !response.viewer.hasPaid &&
-            response.totalViews > 1
-          ) {
-            setExpired(true);
-          }
         } else {
           toast({
             title: 'Media retrieval failed',
@@ -196,28 +187,26 @@ const ViewPage = () => {
                     bottom="0"
                     bg="rgba(0,0,0,0.5)"
                   >
-                    <>
-                      {expired ? (
+                    {media.totalViews > 0 && media.singleView ? (
+                      <Text fontSize="5xl" fontWeight="bold" color="white">
+                        Media Expired :/
+                      </Text>
+                    ) : (
+                      <>
                         <Text fontSize="5xl" fontWeight="bold" color="white">
-                          Expired :/
+                          {valueFormatter(media.price, media.currency)}
                         </Text>
-                      ) : (
-                        <>
-                          <Text fontSize="5xl" fontWeight="bold" color="white">
-                            {valueFormatter(media.price, media.currency)}
-                          </Text>
-                          <Button
-                            mt={4}
-                            colorScheme="green"
-                            size="lg"
-                            onClick={pay}
-                            isDisabled={loadingButton}
-                          >
-                            {loadingButton ? 'Redirecting...' : 'Pay to reveal'}
-                          </Button>
-                        </>
-                      )}
-                    </>
+                        <Button
+                          mt={4}
+                          colorScheme="green"
+                          size="lg"
+                          onClick={pay}
+                          isDisabled={loadingButton}
+                        >
+                          {loadingButton ? 'Redirecting...' : 'Pay to reveal'}
+                        </Button>
+                      </>
+                    )}
                   </Center>
                 </CardBody>
               )}
