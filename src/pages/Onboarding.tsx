@@ -20,11 +20,13 @@ import { supportedCountries } from '../supportedCountries';
 const OnboardingPage = () => {
   const [step, setStep] = useState<number>(0);
   const [country, setCountry] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const toast = useToast();
   const { accessToken, clear } = useContext(AppContext);
 
   const createStripeAccount = async () => {
+    setLoading(true);
     const { success, response } = await sendPostRequest(
       'user/stripe',
       { country },
@@ -50,9 +52,11 @@ const OnboardingPage = () => {
         status: 'error',
       });
     }
+    setLoading(false);
   };
 
   const performKyc = async () => {
+    setLoading(true);
     const { response, success } = await sendGetRequest(
       'payment/kyc',
       accessToken,
@@ -77,6 +81,7 @@ const OnboardingPage = () => {
         status: 'error',
       });
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -127,12 +132,20 @@ const OnboardingPage = () => {
                       </option>
                     ))}
                   </Select>
-                  <Button colorScheme="green" onClick={createStripeAccount}>
+                  <Button
+                    colorScheme="green"
+                    onClick={createStripeAccount}
+                    disabled={loading}
+                  >
                     Create account
                   </Button>
                 </>
               ) : (
-                <Button colorScheme="green" onClick={performKyc}>
+                <Button
+                  colorScheme="blue"
+                  onClick={performKyc}
+                  disabled={loading}
+                >
                   Proceed to onboarding
                 </Button>
               )}

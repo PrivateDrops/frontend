@@ -189,7 +189,7 @@ const ViewPage = () => {
                   >
                     {media.totalViews > 0 && media.singleView ? (
                       <Text fontSize="5xl" fontWeight="bold" color="white">
-                        Media Expired :/
+                        Expired :/
                       </Text>
                     ) : (
                       <>
