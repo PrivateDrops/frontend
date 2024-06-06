@@ -22,6 +22,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { FaCheck } from 'react-icons/fa6';
 import { AppContext } from '../context';
 import { sendPostRequest } from '../lib/request';
+import { errorFormatter } from '../lib/helpers';
 
 const LoginPage = () => {
   const [honeypot, setHoneypot] = useState<string>('');
@@ -72,10 +73,7 @@ const LoginPage = () => {
     } else {
       toast({
         title: 'Login failed',
-        description:
-          response?.error ||
-          (response?.message && response?.message[0]) ||
-          response,
+        description: errorFormatter(response),
         duration: 3000,
         isClosable: true,
         status: 'error',

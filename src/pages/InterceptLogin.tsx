@@ -3,6 +3,7 @@ import { useContext, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AppContext } from '../context';
 import { sendGetRequest } from '../lib/request';
+import { errorFormatter } from '../lib/helpers';
 
 const InterceptLogin = () => {
   const { nonce } = useParams();
@@ -44,10 +45,7 @@ const InterceptLogin = () => {
         } else {
           toast({
             title: 'An error occurred',
-            description:
-              response?.error ||
-              response?.message[0] ||
-              "Can't login, please retry",
+            description: errorFormatter(response),
             duration: 3000,
             isClosable: true,
             status: 'error',

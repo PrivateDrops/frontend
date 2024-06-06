@@ -23,8 +23,8 @@ import { FooterMenu } from '../components/FooterMenu';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { AppContext } from '../context';
 import { sendGetRequest, sendPostRequest } from '../lib/request';
+import { errorFormatter, valueFormatter } from '../lib/helpers';
 import { Auth } from './Auth';
-import { valueFormatter } from '../lib/helpers';
 
 const ProfilePage = () => {
   const [nickname, setNickname] = useState<string>('');
@@ -46,10 +46,7 @@ const ProfilePage = () => {
       if (!success) {
         toast({
           title: 'Error getting user data',
-          description:
-            response?.error ||
-            response?.message[0] ||
-            'An unexpected error occurred',
+          description: errorFormatter(response),
           duration: 3000,
           isClosable: true,
           status: 'error',
@@ -104,10 +101,7 @@ const ProfilePage = () => {
     else
       toast({
         title: 'Update nickname failed',
-        description:
-          response?.error ||
-          response?.message[0] ||
-          'An unexpected error occurred',
+        description: errorFormatter(response),
         duration: 3000,
         isClosable: true,
         status: 'error',

@@ -16,6 +16,7 @@ import { AppContext } from '../context';
 import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { supportedCountries } from '../supportedCountries';
+import { errorFormatter } from '../lib/helpers';
 
 const OnboardingPage = () => {
   const [step, setStep] = useState<number>(0);
@@ -42,11 +43,8 @@ const OnboardingPage = () => {
       setStep(1);
     } else {
       toast({
-        title: 'Error getting verification link',
-        description:
-          response?.error ||
-          response?.message[0] ||
-          'An unexpected error occurred',
+        title: 'Error creating your Stripe account',
+        description: errorFormatter(response),
         duration: 3000,
         isClosable: true,
         status: 'error',
@@ -72,10 +70,7 @@ const OnboardingPage = () => {
     } else {
       toast({
         title: 'Error getting verification link',
-        description:
-          response?.error ||
-          response?.message[0] ||
-          'An unexpected error occurred',
+        description: errorFormatter(response),
         duration: 3000,
         isClosable: true,
         status: 'error',

@@ -26,6 +26,7 @@ import { sendPostRequestWithFile } from '../lib/request';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { AppContext } from '../context';
 import { RadioButton } from '../components/RadioButton';
+import { errorFormatter } from '../lib/helpers';
 
 const UploadPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -121,10 +122,7 @@ const UploadPage = () => {
     if (!success) {
       toast({
         title: 'Upload failed',
-        description:
-          response?.error ||
-          response?.message[0] ||
-          'An unexpected error occurred',
+        description: errorFormatter(response),
         duration: 3000,
         isClosable: true,
         status: 'error',

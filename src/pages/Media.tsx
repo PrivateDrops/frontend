@@ -20,6 +20,7 @@ import { AppContext } from '../context';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { MediaLoader } from '../components/MediaLoader';
 import { FooterMenu } from '../components/FooterMenu';
+import { errorFormatter } from '../lib/helpers';
 
 const MediaPage = () => {
   const [media, setMedia] = useState<any[]>([]);
@@ -34,10 +35,7 @@ const MediaPage = () => {
       if (!success) {
         toast({
           title: 'An error occurred',
-          description:
-            response?.error ||
-            response?.message[0] ||
-            'An unexpected error occurred',
+          description: errorFormatter(response),
           duration: 3000,
           status: 'error',
         });
