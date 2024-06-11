@@ -1,7 +1,13 @@
+import { useEffect } from 'react';
 import { Center, Heading, Icon, Text } from '@chakra-ui/react';
 import { FaBan } from 'react-icons/fa6';
+import ReactGA from 'react-ga4';
 
 const BannedPage = () => {
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: '/banned', title: 'Banned' });
+  }, []);
+
   return (
     <Center h="100vh" flexDirection="column">
       <Icon as={FaBan} color={'red.600'} boxSize={35} />

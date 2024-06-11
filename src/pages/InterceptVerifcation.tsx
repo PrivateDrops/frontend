@@ -1,11 +1,20 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Center, Heading, Spinner, useToast } from '@chakra-ui/react';
+import ReactGA from 'react-ga4';
 
 const InterceptVerifcation = () => {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const toast = useToast();
+
+  useEffect(() => {
+    ReactGA.send({
+      hitType: 'pageview',
+      page: '/verification',
+      title: 'InterceptVerification',
+    });
+  }, []);
 
   useEffect(() => {
     const status = queryParams.get('success');
@@ -16,6 +25,10 @@ const InterceptVerifcation = () => {
         duration: 2000,
         isClosable: true,
         status: 'success',
+      });
+      ReactGA.event({
+        category: 'Intercept Verifcation Page',
+        action: 'user account verified',
       });
       navigate('/profile');
     } else {

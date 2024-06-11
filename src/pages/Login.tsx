@@ -17,6 +17,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import ReactGA from 'react-ga4';
 import validator from 'validator';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { FaCheck } from 'react-icons/fa6';
@@ -33,6 +34,10 @@ const LoginPage = () => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const navigate = useNavigate();
   const toast = useToast();
+
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: '/login', title: 'Login' });
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;

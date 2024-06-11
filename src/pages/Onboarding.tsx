@@ -12,6 +12,7 @@ import {
   VStack,
   useToast,
 } from '@chakra-ui/react';
+import ReactGA from 'react-ga4';
 import { AppContext } from '../context';
 import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { ResponsiveCard } from '../components/ResponsiveCard';
@@ -25,6 +26,14 @@ const OnboardingPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { accessToken, clear } = useContext(AppContext);
+
+  useEffect(() => {
+    ReactGA.send({
+      hitType: 'pageview',
+      page: '/onboarding',
+      title: 'Onboarding',
+    });
+  }, []);
 
   const createStripeAccount = async () => {
     setLoading(true);

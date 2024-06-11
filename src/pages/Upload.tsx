@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Input,
@@ -20,6 +20,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { FaPlus, FaCircleXmark, FaCopy } from 'react-icons/fa6';
+import ReactGA from 'react-ga4';
 import { FooterMenu } from '../components/FooterMenu';
 import { Auth } from './Auth';
 import { sendPostRequestWithFile } from '../lib/request';
@@ -40,6 +41,10 @@ const UploadPage = () => {
   const toast = useToast();
   const { onCopy, hasCopied } = useClipboard(url);
   const { accessToken } = useContext(AppContext);
+
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: '/upload', title: 'Upload' });
+  }, []);
 
   const handleOptionChoice = (view: string) => {
     if (view == 'Once') setIsSingleView(true);
@@ -141,6 +146,10 @@ const UploadPage = () => {
       duration: 2000,
       isClosable: true,
       status: 'success',
+    });
+    ReactGA.event({
+      category: 'Upload Page',
+      action: 'media uploaded',
     });
   };
 

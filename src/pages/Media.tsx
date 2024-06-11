@@ -14,13 +14,14 @@ import {
 import ReactTimeAgo from 'react-time-ago';
 import { FaLink, FaTrash } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
+import ReactGA from 'react-ga4';
 import { Auth } from './Auth';
 import { sendDeleteRequest, sendGetRequest } from '../lib/request';
+import { errorFormatter } from '../lib/helpers';
 import { AppContext } from '../context';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { MediaLoader } from '../components/MediaLoader';
 import { FooterMenu } from '../components/FooterMenu';
-import { errorFormatter } from '../lib/helpers';
 
 const MediaPage = () => {
   const [media, setMedia] = useState<any[]>([]);
@@ -28,6 +29,10 @@ const MediaPage = () => {
   const { accessToken } = useContext(AppContext);
   const toast = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: '/media', title: 'Media' });
+  }, []);
 
   useEffect(() => {
     const load = async () => {

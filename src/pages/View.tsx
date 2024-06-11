@@ -26,6 +26,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaInfoCircle } from 'react-icons/fa';
+import ReactGA from 'react-ga4';
 import { sendGetRequest, sendPostRequest } from '../lib/request';
 import { errorFormatter, valueFormatter } from '../lib/helpers';
 import { ResponsiveCard } from '../components/ResponsiveCard';
@@ -63,6 +64,10 @@ const ViewPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: '/view', title: 'View' });
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -136,7 +141,13 @@ const ViewPage = () => {
       code,
       rating: n,
     });
-    if (success) localStorage.setItem('userRating_' + code, String(n));
+    if (success) {
+      localStorage.setItem('userRating_' + code, String(n));
+      ReactGA.event({
+        category: 'View Page',
+        action: 'left feedback',
+      });
+    }
   };
 
   const handleFullScreen = (event: React.MouseEvent<HTMLDivElement>) => {

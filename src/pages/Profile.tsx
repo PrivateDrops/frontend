@@ -19,6 +19,7 @@ import {
   Tr,
   Badge,
 } from '@chakra-ui/react';
+import ReactGA from 'react-ga4';
 import { FooterMenu } from '../components/FooterMenu';
 import { ResponsiveCard } from '../components/ResponsiveCard';
 import { AppContext } from '../context';
@@ -34,6 +35,10 @@ const ProfilePage = () => {
   const [balanceTransactions, setBalanceTransactions] = useState<any[]>([]);
   const { accessToken, user } = useContext(AppContext);
   const toast = useToast();
+
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: '/profile', title: 'Profile' });
+  }, []);
 
   useEffect(() => {
     const load = async () => {

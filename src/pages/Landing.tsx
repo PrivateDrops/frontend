@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Box,
   Heading,
@@ -8,6 +9,7 @@ import {
   createIcon,
   Show,
 } from '@chakra-ui/react';
+import ReactGA from 'react-ga4';
 
 const Arrow = createIcon({
   displayName: 'Arrow',
@@ -23,6 +25,10 @@ const Arrow = createIcon({
 });
 
 const HomePage = () => {
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: '/', title: 'Landing' });
+  }, []);
+
   return (
     <>
       <Box position="relative" height="100vh" width="100vw" overflow="hidden">

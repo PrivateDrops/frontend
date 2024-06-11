@@ -1,6 +1,12 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import ReactGA from 'react-ga4';
 
 const ErrorPage = () => {
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: '/error', title: 'Error' });
+  }, []);
+
   return (
     <div
       style={{

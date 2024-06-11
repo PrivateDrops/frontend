@@ -1,12 +1,21 @@
 import { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Center, Heading, Spinner, useToast } from '@chakra-ui/react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import ReactGA from 'react-ga4';
 import { sendGetRequest } from '../lib/request';
 
 const InterceptPayment = () => {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
   const toast = useToast();
+
+  useEffect(() => {
+    ReactGA.send({
+      hitType: 'pageview',
+      page: '/payment',
+      title: 'InterceptPayment',
+    });
+  }, []);
 
   const paymentConfirmed = async (code: string) => {
     const { response, success } = await sendGetRequest(
@@ -31,6 +40,10 @@ const InterceptPayment = () => {
             duration: 2000,
             isClosable: true,
             status: 'success',
+          });
+          ReactGA.event({
+            category: 'Intercept Payment Page',
+            action: 'payment verified',
           });
           navigate(`/view/${code}`);
         }

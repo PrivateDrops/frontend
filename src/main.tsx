@@ -11,6 +11,7 @@ import {
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import * as Sentry from '@sentry/react';
+import ReactGA from 'react-ga4';
 import { Providers } from './Providers.tsx';
 import LandingPage from './pages/Landing.tsx';
 import UploadPage from './pages/Upload.tsx';
@@ -25,6 +26,8 @@ import BannedPage from './pages/Banned.tsx';
 import InterceptVerifcation from './pages/InterceptVerifcation.tsx';
 import OnboardingPage from './pages/Onboarding.tsx';
 import './index.css';
+
+ReactGA.initialize(import.meta.env.VITE_GOOGLE_ANALYTICS_ID);
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
