@@ -25,6 +25,7 @@ import ErrorPage from './pages/Error.tsx';
 import BannedPage from './pages/Banned.tsx';
 import InterceptVerifcation from './pages/InterceptVerifcation.tsx';
 import OnboardingPage from './pages/Onboarding.tsx';
+import TosPage from './pages/Tos.tsx';
 import './index.css';
 
 ReactGA.initialize(import.meta.env.VITE_GOOGLE_ANALYTICS_ID);
@@ -101,6 +102,10 @@ const router = sentryCreateBrowserRouter([
   {
     path: '/view/:code',
     element: <ViewPage />,
+  },
+  {
+    path: '/tos',
+    element: <TosPage />,
   },
   {
     path: '*',
